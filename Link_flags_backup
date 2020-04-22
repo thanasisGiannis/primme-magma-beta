@@ -1,0 +1,89 @@
+#---------------------------------------------------------------
+#             LINKING FLAGS FOR THE TEST PROGRAMS
+# 	      in ZTEST and DTEST test directories
+#     Linking primme, BLAS/LAPACK for various architectures. 
+#        Makefiles in TEST must also include Make_flags
+#---------------------------------------------------------------
+
+#---------------------------------------------------------------
+# Loaders
+#---------------------------------------------------------------
+CLDR ?= $(CC)
+FLDR ?= $(F77)
+MAGMADIR ?= /usr/local/magma-2.2.0
+CUDADIR  ?= /usr/local/cuda-7.5
+MKLDIR   ?= /opt/intel/mkl
+OPENBLASDIR ?= /usr/local/OpenBLAS-0.2.19
+#---------------------------------------------------------------
+#  Basic Link flags for LAPACK/BLAS and math
+#---------------------------------------------------------------
+# Debian, Ubuntu, SuSE Linux (>= 13.2)
+#
+
+#LDFLAGS ?=
+#LIBS ?= -lprimme -lm -llapack -lblas -lgfortran
+#---------------------------------------------------------------
+# Debian, Ubuntu, SuSE Linux (>=13.2)
+#
+
+MAGMA_LIBS = -L$(MKLDIR)/lib/intel64 -Xcompiler -fopenmp  \
+		   -lmkl_gf_lp64 -lmkl_gnu_thread -lmkl_core -lpthread \
+		   -L$(MAGMADIR)/lib -lmagma -lmagma_sparse \
+             -L$(CUDADIR)/lib64 -lcublas -lcudadevrt -lcudart -lcusparse \
+		   -lstdc++ -lm -lgfortran
+
+LDFLAGS ?=
+# -g -G 
+LIBS ?= -lprimme $(MAGMA_LIBS) -lm -lgfortran
+
+
+#MAGMA_LIBS = -L$(MAGMADIR)/lib -lmagma \
+#             -L$(CUDADIR)/lib64 -lcublas -lcudart -lcusparse
+
+#LIBS ?= -lprimme $(MAGMA_LIBS) -L$(OPENBLASDIR)/lib -lopenblas -lm -lgfortran
+
+
+#---------------------------------------------------------------
+# SuSE Linux (<= 13.1), Centos
+#
+# LDFLAGS =
+# LIBS = -lprimme -lm -llapack -lblas -lgfortran -lg2c
+#---------------------------------------------------------------
+# IBM architectures
+#
+# LDFLAGS =
+# LIBS = -lprimme -lessl -lm           # using ESSL
+#                                      # using BLAS/LAPACK
+# LIBS = -lprimme -llapack -lblas -lxlf90 -lxl -lxlfmath -lm
+#---------------------------------------------------------------
+# Mac OS X
+#
+# LDFLAGS = -Wl,-framework -Wl,vecLib -m64        # Mac OS X 10.0
+# LDFLAGS = -Wl,-framework -Wl,Accelerate -m64    # Mac OS X 10.3
+# LIBS = -lprimme -lm
+#---------------------------------------------------------------
+# Using Intel compilers
+#
+# LIBS = -lprimme -mkl
+#---------------------------------------------------------------
+# Sun Solaris, SunOS 5.9  using sunperf math library
+#
+# LDFLAGS = 
+# LIBS = -lprimme -lm -lrt -xlic_lib=sunperf
+#---------------------------------------------------------------
+# Cray
+#
+# LDFLAGS = -framework Accelerate
+# LIBS = -lprimme -lm -llapack -lblas
+#---------------------------------------------------------------
+# Using ACML for lapack/blas
+#
+# LDFLAGS =
+# LIBS = -lprimme -lm -L/usr/local/acml-3.5.0/gnu64/lib/ -lacml -lacml_mv
+# LIBS = -lprimme -lm -L/usr/local/acml-3.5.0/gnu64/lib/ -lacml -lacml_mv -lg2c
+#---------------------------------------------------------------
+
+#---------------------------------------------------------------
+# Link any other sequential or parallel libraries 
+# in the test makefiles
+#---------------------------------------------------------------

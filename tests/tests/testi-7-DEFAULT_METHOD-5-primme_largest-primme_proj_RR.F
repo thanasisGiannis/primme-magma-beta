@@ -1,0 +1,11 @@
+driver.matrixFile = laplace7.mtx
+driver.checkXFile = tests/sol_testi-7-5-primme_largest
+driver.PrecChoice = noprecond
+primme.numEvals = 5
+primme.eps = 1e-6
+primme.numTargetShifts = 1
+primme.targetShifts  = 0.5
+primme.target = primme_largest
+primme.projection.projection = primme_proj_RR
+primme.maxMatvecs = 50000
+method = PRIMME_DEFAULT_METHOD

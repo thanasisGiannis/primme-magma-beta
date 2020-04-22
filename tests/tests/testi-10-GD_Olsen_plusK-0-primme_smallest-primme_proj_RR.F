@@ -1,0 +1,11 @@
+driver.matrixFile = laplace10.mtx
+driver.checkXFile = tests/sol_testi-10-0-primme_smallest
+driver.PrecChoice = noprecond
+primme.numEvals = 0
+primme.eps = 1e-6
+primme.numTargetShifts = 1
+primme.targetShifts  = 0.5
+primme.target = primme_smallest
+primme.projection.projection = primme_proj_RR
+primme.maxMatvecs = 50000
+method = PRIMME_GD_Olsen_plusK

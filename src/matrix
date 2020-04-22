@@ -1,0 +1,1355 @@
+eigs/auxiliary_eigs.c:   if (primme->numProcs > 1) {
+eigs/auxiliary_eigs.c:   assert(primme->nLocal == nLocal);
+eigs/auxiliary_eigs.c:   if (primme->correctionParams.precondition) {
+eigs/auxiliary_eigs.c:      if (primme->ldOPs == 0
+eigs/auxiliary_eigs.c:            || (ldV == primme->ldOPs && ldW == primme->ldOPs)) {
+eigs/auxiliary_eigs.c:         CHKERRM((primme->applyPreconditioner(V, &ldV, W, &ldW, &blockSize,
+eigs/auxiliary_eigs.c:            CHKERRM((primme->applyPreconditioner(&V[ldV*i], &primme->ldOPs,
+eigs/auxiliary_eigs.c:                        &W[ldW*i], &primme->ldOPs, &ONE, primme, &ierr), ierr),
+eigs/auxiliary_eigs.c:      primme->stats.numPreconds += blockSize;
+eigs/auxiliary_eigs.c:   primme->stats.timePrecond += primme_wTimer(0) - t0;
+eigs/auxiliary_eigs.c:   CHKERRM((primme->convTestFun(&evald, evec, &rNormd, isconv, primme, &ierr),
+eigs/convergence.c:   targetShift = primme->numTargetShifts > 0 ?
+eigs/convergence.c:      primme->targetShifts[min(primme->initSize, primme->numTargetShifts-1)] : 0.0;
+eigs/convergence.c:   tol = max(machEps * max(primme->stats.estimateLargestSVal, primme->aNorm),
+eigs/convergence.c:               primme->stats.maxConvTol);
+eigs/convergence.c:   if (primme->locking) {
+eigs/convergence.c:      attainableTol = sqrt((double)(primme->numOrthoConst+numLocked))*tol;
+eigs/convergence.c:      blockNorms[i-left] = max(blockNorms[i-left], primme->stats.estimateResidualError);
+eigs/convergence.c:      if ((primme->target == primme_closest_leq
+eigs/convergence.c:            (primme->target == primme_closest_geq
+eigs/convergence.c:      else if (primme->locking && numLocked > 0 && blockNorms[i-left] < attainableTol ) {
+eigs/convergence.c:      else if (blockNorms[i-left] <= primme->stats.estimateResidualError && reset) {
+eigs/convergence.c:               primme->numOrthoConst+numLocked, ldevecs, left, toProject,
+eigs/convergence.c: * rwork           real work array of size: 2*maxEvecsSize*primme->maxBlockSize
+eigs/convergence.c:         if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/convergence.c:            fprintf(primme->outputFile,
+eigs/convergence.c:                  fflush(primme->outputFile);
+eigs/correction.c: *                3*maxEvecsSize + 2*primme->maxBlockSize 
+eigs/correction.c: *                + (primme->numEvals+primme->maxBasisSize)
+eigs/correction.c: *                + 4*primme->nLocal + primme->nLocal    | For QMR work and sol|
+eigs/correction.c: *                + primme->nLocal*primme->maxBlockSize  | OLSEN for Kinvx     |
+eigs/correction.c:   if (primme->correctionParams.projectors.RightX &&  
+eigs/correction.c:       primme->correctionParams.projectors.SkewX ) { 
+eigs/correction.c:      if (primme->correctionParams.maxInnerIterations == 0) {    
+eigs/correction.c:         sol = Kinvx + primme->ldOPs*blockSize;
+eigs/correction.c:         neededRsize = neededRsize + primme->ldOPs*blockSize;
+eigs/correction.c:         sol = Kinvx + primme->nLocal;
+eigs/correction.c:         neededRsize = neededRsize + primme->nLocal;
+eigs/correction.c:   if (primme->correctionParams.maxInnerIterations == 0) {    
+eigs/correction.c:      linSolverRWork = sol + primme->nLocal;      /* sol needed in innerJD */
+eigs/correction.c:      neededRsize = neededRsize + primme->nLocal;
+eigs/correction.c:              4*primme->nLocal + 2*(primme->numOrthoConst+primme->numEvals);
+eigs/correction.c:      *iwork = max(*iwork, primme->numEvals+primme->maxBasisSize);
+eigs/correction.c:   if (primme->locking && 
+eigs/correction.c:      (primme->target == primme_smallest || primme->target == primme_largest)) {
+eigs/correction.c:   if (primme->target != primme_smallest && primme->target != primme_largest) {
+eigs/correction.c:               <  primme->targetShifts[min(primme->numTargetShifts-1,numLocked)]
+eigs/correction.c:             &&   primme->targetShifts[min(primme->numTargetShifts-1,numLocked)]
+eigs/correction.c:               primme->targetShifts[min(primme->numTargetShifts-1, numLocked)];
+eigs/correction.c:                  primme->targetShifts[min(primme->numTargetShifts-1,numLocked)]
+eigs/correction.c:      if (primme->correctionParams.robustShifts) { 
+eigs/correction.c:            if (primme->target == primme_smallest) {
+eigs/correction.c:   primme->ShiftsForPreconditioner = blockOfShifts;
+eigs/correction.c:   if (primme->correctionParams.maxInnerIterations == 0) {
+eigs/correction.c:      if ( primme->correctionParams.projectors.RightX &&
+eigs/correction.c:           primme->correctionParams.projectors.SkewX    ) {    
+eigs/correction.c:         if ( primme->correctionParams.projectors.RightX ) {   
+eigs/correction.c:               Num_axpy_Sprimme(primme->nLocal, -approxOlsenEps[blockIndex],
+eigs/correction.c:         CHKERR(applyPreconditioner_Sprimme(r, primme->nLocal, ldW,
+eigs/correction.c:         primme->ShiftsForPreconditioner = &blockOfShifts[blockIndex];
+eigs/correction.c:         Num_copy_Sprimme(primme->nLocal, sol, 1, 
+eigs/correction.c:   if (primme->stats.numOuterIterations <= 1) {
+eigs/correction.c:      if (eval >= numLocked || (primme->target == primme_largest && 
+eigs/correction.c:                           || (primme->target == primme_smallest &&
+eigs/correction.c:      else if (ritzVal >= basisSize || (primme->target == primme_largest &&
+eigs/correction.c:                                   || (primme->target == primme_smallest &&
+eigs/correction.c:   CHKERR(applyPreconditioner_Sprimme(x, primme->nLocal, ldx, Kinvx, ldx,
+eigs/correction.c:        Num_dot_Sprimme(primme->nLocal, &x[ldx*blockIndex],1, 
+eigs/correction.c:        Num_dot_Sprimme(primme->nLocal, &Kinvx[ldx*blockIndex],1,
+eigs/correction.c:   CHKERR(applyPreconditioner_Sprimme(r, primme->nLocal, ldr, x, ldx,
+eigs/correction.c:      Num_axpy_Sprimme(primme->nLocal,alpha,&Kinvx[ldx*blockIndex],
+eigs/correction.c: *       primme->LeftQ  : evecs in the left projector
+eigs/correction.c: *       primme->LeftX  : x in the left projector
+eigs/correction.c: *       primme->RightQ : evecs in the right projector
+eigs/correction.c: *       primme->RightX : x in the right projector
+eigs/correction.c: *       primme->SkewQ  : evecs in the right one, should be skewed
+eigs/correction.c: *       primme->SkewX  : x in the right one, should be skewed
+eigs/correction.c:   n = primme->nLocal;
+eigs/correction.c:   if (primme->locking) 
+eigs/correction.c:      sizeEvecs = primme->numOrthoConst+numLocked;
+eigs/correction.c:      sizeEvecs = primme->numOrthoConst+numConverged;
+eigs/correction.c:   if (primme->correctionParams.projectors.LeftQ) {
+eigs/correction.c:         if (primme->correctionParams.projectors.LeftX) {
+eigs/correction.c:      if (primme->correctionParams.projectors.LeftX) {
+eigs/correction.c:   if (primme->correctionParams.projectors.RightQ) {
+eigs/correction.c:      if (primme->correctionParams.precondition    &&
+eigs/correction.c:          primme->correctionParams.projectors.SkewQ) {
+eigs/correction.c:   if (primme->correctionParams.projectors.RightX) {
+eigs/correction.c:      if (primme->correctionParams.precondition   &&
+eigs/correction.c:          primme->correctionParams.projectors.SkewX) {
+eigs/correction.c:         CHKERR(applyPreconditioner_Sprimme(x, primme->nLocal, primme->nLocal,
+eigs/correction.c:                  Kinvx, primme->nLocal, 1, primme), -1);
+eigs/correction.c:         primme->stats.numPreconds += 1;
+eigs/correction.c:         xKinvx_local = Num_dot_Sprimme(primme->nLocal, x, 1, Kinvx, 1);
+eigs/globalsum.c: * Purpose - Wrappers around primme->globalSumDouble
+eigs/globalsum.c:   if (primme && primme->globalSumReal) {
+eigs/globalsum.c:      CHKERRM((primme->globalSumReal(sendBuf, recvBuf, &count, primme, &ierr),
+eigs/globalsum.c:      primme->stats.timeGlobalSum += primme_wTimer(0) - t0;
+eigs/globalsum.c:      primme->stats.volumeGlobalSum += count;
+eigs/init.c: *            guesses. Holds as many as primme->numOrthoConst + primme->numEvals
+eigs/init.c: *              (primme->numOrthoConst + primme->numEvals).
+eigs/init.c:            0, primme->numOrthoConst, NULL, rworkSize, 1/*symmetric*/, primme);
+eigs/init.c:            primme->numOrthoConst, NULL, rworkSize, primme);
+eigs/init.c:            primme->numOrthoConst-1, NULL, 0, 0, nLocal, 
+eigs/init.c:            NULL, 0, primme->numOrthoConst, nLocal, 
+eigs/init.c:   if (primme->numOrthoConst > 0) {
+eigs/init.c:        primme->numOrthoConst - 1, NULL, 0, 0, nLocal, 
+eigs/init.c:        primme->iseed, machEps, rwork, rworkSize, primme), -1);
+eigs/init.c:         CHKERR(applyPreconditioner_Sprimme(evecs, primme->nLocal, ldevecs,
+eigs/init.c:                  evecsHat, ldevecsHat, primme->numOrthoConst, primme), -1);
+eigs/init.c:                  ldevecsHat, M, ldM, nLocal, 0, primme->numOrthoConst, rwork,
+eigs/init.c:                  primme->numOrthoConst, rwork, rworkSize, primme), -1);
+eigs/init.c:   if (!primme->locking) {
+eigs/init.c:      initSize = min(primme->maxBasisSize, primme->initSize);
+eigs/init.c:      initSize = min(primme->minRestartSize, primme->initSize);
+eigs/init.c:   *numGuesses = primme->initSize - initSize;
+eigs/init.c:   *nextGuess = primme->numOrthoConst + initSize;
+eigs/init.c:   Num_copy_matrix_Sprimme(&evecs[primme->numOrthoConst*ldevecs],
+eigs/init.c:   switch(primme->initBasisMode) {
+eigs/init.c:      random = max(0,primme->minRestartSize-initSize);
+eigs/init.c:      random = max(primme->maxBlockSize-initSize, 0);
+eigs/init.c:      Num_larnv_Sprimme(2, primme->iseed, nLocal,
+eigs/init.c:         evecs, ldevecs, primme->numOrthoConst, nLocal, 
+eigs/init.c:         primme->iseed, machEps, rwork, rworkSize, primme), -1)
+eigs/init.c:   if (primme->initBasisMode == primme_init_krylov) {
+eigs/init.c:            primme->minRestartSize-1, evecs, ldevecs, primme->numOrthoConst,
+eigs/init.c:      *basisSize = primme->minRestartSize;
+eigs/init.c:   /* primme->maxBlockSize as the block Size.                              */ 
+eigs/init.c:   blockSize = numNewVectors <= primme->maxBlockSize ? 1 : primme->maxBlockSize;
+eigs/init.c:         Num_larnv_Sprimme(2, primme->iseed, nLocal, &V[ldV*i]);
+eigs/init.c:            nLocal, primme->iseed, machEps, rwork, rworkSize, primme), -1);
+eigs/init.c:               ldlocked, numLocked, nLocal, primme->iseed, machEps,
+eigs/inner_solve.c: *             4*primme->nLocal + 2*(primme->numOrthoConst+primme->numEvals)
+eigs/inner_solve.c:   d      = g + primme->nLocal;
+eigs/inner_solve.c:   delta  = d + primme->nLocal;
+eigs/inner_solve.c:   w      = delta + primme->nLocal;
+eigs/inner_solve.c:   workSpace = w + primme->nLocal; /* This needs at least 2*numOrth+NumEvals) */
+eigs/inner_solve.c:   assert(rworkSize >= (size_t)primme->nLocal*4
+eigs/inner_solve.c:                       + 2*(primme->numOrthoConst+primme->numEvals));
+eigs/inner_solve.c:   aNorm = max(primme->stats.estimateLargestSVal, primme->aNorm);
+eigs/inner_solve.c:   switch(primme->correctionParams.convTest) {
+eigs/inner_solve.c:            pow(primme->correctionParams.relTolBase, 
+eigs/inner_solve.c:   if (primme->maxMatvecs > 0) {
+eigs/inner_solve.c:      maxIterations = primme->maxMatvecs - primme->stats.numMatvecs;
+eigs/inner_solve.c:   if (primme->correctionParams.maxInnerIterations > 0) {
+eigs/inner_solve.c:      maxIterations = min(primme->correctionParams.maxInnerIterations, 
+eigs/inner_solve.c:   Num_copy_Sprimme(primme->nLocal, r, 1, g, 1);
+eigs/inner_solve.c:   for (i = 0; i < primme->nLocal; i++) {
+eigs/inner_solve.c:         if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/inner_solve.c:            fprintf(primme->outputFile,"Exiting because SIGMA %e\n",sigma_prev);
+eigs/inner_solve.c:            Num_copy_Sprimme(primme->nLocal, r, 1, sol, 1);
+eigs/inner_solve.c:         if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/inner_solve.c:            fprintf(primme->outputFile,"Exiting because ALPHA %e\n",alpha_prev);
+eigs/inner_solve.c:            Num_copy_Sprimme(primme->nLocal, r, 1, sol, 1);
+eigs/inner_solve.c:      Num_axpy_Sprimme(primme->nLocal, -alpha_prev, w, 1, g, 1);
+eigs/inner_solve.c:      for (i = 0; i < primme->nLocal; i++) {
+eigs/inner_solve.c:         if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/inner_solve.c:            fprintf(primme->outputFile,"Exiting because abs(rho) %e\n",
+eigs/inner_solve.c:         if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/inner_solve.c:            fprintf(primme->outputFile, " tau < LTol %e %e\n",tau, LTolerance);
+eigs/inner_solve.c:            if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/inner_solve.c:               fprintf(primme->outputFile, " tau < R eres \n");
+eigs/inner_solve.c:         if (primme->target == primme_smallest && eval_updated > eval_prev) {
+eigs/inner_solve.c:            if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/inner_solve.c:               fprintf(primme->outputFile, "eval_updated > eval_prev\n");
+eigs/inner_solve.c:         else if (primme->target == primme_largest && eval_updated < eval_prev){
+eigs/inner_solve.c:            if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/inner_solve.c:               fprintf(primme->outputFile, "eval_updated < eval_prev\n");
+eigs/inner_solve.c:         else if (primme->target == primme_closest_abs
+eigs/inner_solve.c:            if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/inner_solve.c:               fprintf(primme->outputFile, "|eval-eval_updated| > tau0+eres\n");
+eigs/inner_solve.c:            if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/inner_solve.c:               fprintf(primme->outputFile, "eres < eresTol %e \n",eres_updated);
+eigs/inner_solve.c:            if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/inner_solve.c:               fprintf(primme->outputFile, " eigenvalue and residual norm "
+eigs/inner_solve.c:         if (primme->printLevel >= 4 && primme->procID == 0) {
+eigs/inner_solve.c:            fprintf(primme->outputFile,
+eigs/inner_solve.c:                  primme->stats.numMatvecs, primme_wTimer(0), eval_updated,
+eigs/inner_solve.c:            fflush(primme->outputFile);
+eigs/inner_solve.c:            if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/inner_solve.c:               fprintf(primme->outputFile, " eigenvalue and residual norm "
+eigs/inner_solve.c:         else if (primme->printLevel >= 4 && primme->procID == 0) {
+eigs/inner_solve.c:            fprintf(primme->outputFile,
+eigs/inner_solve.c:                  primme->stats.numMatvecs, primme_wTimer(0),tau);
+eigs/inner_solve.c:            fflush(primme->outputFile);
+eigs/inner_solve.c:         Num_axpy_Sprimme(primme->nLocal, beta, d, 1, w, 1);
+eigs/inner_solve.c:   CHKERR(applyPreconditioner_Sprimme(v, primme->nLocal, primme->nLocal, result,
+eigs/inner_solve.c:            primme->nLocal, 1, primme), -1);
+eigs/inner_solve.c:   CHKERR(apply_skew_projector(x, primme->nLocal, RprojectorX, ldRprojectorX,
+eigs/inner_solve.c:         Num_axpy_Sprimme(primme->nLocal, -overlaps[0], Qhat, 1, v, 1);
+eigs/inner_solve.c:         Num_gemv_Sprimme("C", primme->nLocal, numCols, 1.0, Q, ldQ, v, 1, 0.0,
+eigs/inner_solve.c:            Num_gemv_Sprimme("N", primme->nLocal, numCols, -1.0, Qhat, ldQhat,
+eigs/inner_solve.c:            Num_gemv_Sprimme("N", primme->nLocal, numCols, -1.0, Qhat, ldQhat,
+eigs/inner_solve.c:   CHKERR(matrixMatvec_Sprimme(v, primme->nLocal, primme->nLocal, result,
+eigs/inner_solve.c:         primme->nLocal, 0, 1, primme), -1);
+eigs/inner_solve.c:   Num_axpy_Sprimme(primme->nLocal, -shift, v, 1, result, 1); 
+eigs/inner_solve.c:   Num_gemv_Sprimme("C", primme->nLocal, numCols, 1.0, Q, ldQ, v, 1, 0.0,
+eigs/inner_solve.c:   Num_gemv_Sprimme("N", primme->nLocal, numCols, -1.0, Q, ldQ, overlaps,
+eigs/inner_solve.c:   temp = Num_dot_Sprimme(primme->nLocal, x, incx, y, incy);
+eigs/inner_solve.c:   temp = Num_dot_Sprimme(primme->nLocal, x, incx, y, incy);
+eigs/locking.c:               basisSize, NULL, 0, NULL, 0, NULL, primme->maxBlockSize, 0, 0,
+eigs/locking.c:               NULL, 0, NULL, primme->maxBlockSize, NULL, 0, NULL, 0, NULL, 0));
+eigs/locking.c:   overbooking = (*numConverged > primme->numEvals);
+eigs/locking.c:         primme->maxBlockSize),
+eigs/locking.c:         primme->numEvals-*numConverged+1));
+eigs/locking.c:         primme->maxBasisSize-*restartSize-numPrevRetained
+eigs/locking.c:                  numPacked < primme->numEvals-*numLocked
+eigs/locking.c:                  && (i < primme->numEvals-*numLocked
+eigs/locking.c:                     || primme->target == primme_closest_geq
+eigs/locking.c:                     || primme->target == primme_closest_leq)))) {
+eigs/locking.c:         restartPerm[min(*numConverged, primme->numEvals)-*numLocked + k++] = i;
+eigs/locking.c:            evecs, *numLocked+primme->numOrthoConst, left,
+eigs/locking.c:      if (flags[i] != UNCONVERGED && *numLocked+j < primme->numEvals) {
+eigs/locking.c:                  &evecs[(*numLocked+primme->numOrthoConst+j)*ldevecs],
+eigs/locking.c:            primme->maxBasisSize-*restartSize-numPrevRetained
+eigs/locking.c:       if (flags[i] != UNCONVERGED && *numLocked < primme->numEvals) {
+eigs/locking.c:                  &evecs[(numLocked0+i-left+primme->numOrthoConst)*ldevecs],
+eigs/locking.c:                  &evecs[(*numLocked+primme->numOrthoConst)*ldevecs], ldevecs);
+eigs/locking.c:            primme->stats.maxConvTol = max(primme->stats.maxConvTol, resNorm);
+eigs/locking.c:         if (primme->printLevel >= 2 && primme->procID == 0) { 
+eigs/locking.c:            fprintf(primme->outputFile, 
+eigs/locking.c:                  primme->stats.numMatvecs, primme_wTimer(0), flags[i]);
+eigs/locking.c:            fflush(primme->outputFile);
+eigs/locking.c:   if ( primme->target == primme_smallest ) {
+eigs/locking.c:   else if ( primme->target == primme_largest ) {
+eigs/locking.c:        primme->targetShifts[min(primme->numTargetShifts-1, numLocked)];
+eigs/locking.c:      if ( primme->target == primme_closest_geq ) {
+eigs/locking.c:            ithShift =primme->targetShifts[min(primme->numTargetShifts-1, i-1)];
+eigs/locking.c:      else if ( primme->target == primme_closest_leq ) {
+eigs/locking.c:            ithShift =primme->targetShifts[min(primme->numTargetShifts-1, i-1)];
+eigs/locking.c:      else if ( primme->target == primme_closest_abs ) {
+eigs/locking.c:            ithShift =primme->targetShifts[min(primme->numTargetShifts-1, i-1)];
+eigs/locking.c:      else if ( primme->target == primme_largest_abs ) {
+eigs/locking.c:            ithShift =primme->targetShifts[min(primme->numTargetShifts-1, i-1)];
+eigs/main_iter.c:      magma_getdevices(&(primme->devices),1,&(primme->num_dev));
+eigs/main_iter.c:      magma_queue_create(primme->devices,&(primme->queue));
+eigs/main_iter.c:      magma_malloc((magma_ptr*)&primme->gpu_matrix,sizeof(SCALAR)*(primme->n));
+eigs/main_iter.c:      magma_setmatrix((primme->n)/2,(primme->n/2),sizeof(SCALAR),primme->matrix,(primme->n)/2,
+eigs/main_iter.c:                       primme->gpu_matrix,(primme->n)/2,primme->queue);
+eigs/main_iter.c:      primme->cpu_matrix = primme->matrix;
+eigs/main_iter.c:      primme->matrix     = primme->gpu_matrix;
+eigs/main_iter.c:   maxEvecsSize = primme->numOrthoConst + primme->numEvals;
+eigs/main_iter.c:   if (primme->projectionParams.projection != primme_proj_RR) {
+eigs/main_iter.c:   ldV = ldW = ldQ = primme->ldOPs;
+eigs/main_iter.c:   magma_malloc((magma_ptr*)&primme->gpu_realWork,sizeof(SCALAR)*(primme->realWorkSize));
+eigs/main_iter.c:   rwork         = (SCALAR *) primme->gpu_realWork;
+eigs/main_iter.c:   V             = rwork; rwork += primme->ldOPs*primme->maxBasisSize;
+eigs/main_iter.c:   W             = rwork; rwork += primme->ldOPs*primme->maxBasisSize;
+eigs/main_iter.c:   cpu_V             = cpu_rwork; cpu_rwork += primme->ldOPs*primme->maxBasisSize;
+eigs/main_iter.c:   cpu_W             = cpu_rwork; cpu_rwork += primme->ldOPs*primme->maxBasisSize;
+eigs/main_iter.c:      Q          = rwork; rwork += primme->ldOPs*primme->maxBasisSize*numQR;
+eigs/main_iter.c:      R          = rwork; rwork += primme->maxBasisSize*primme->maxBasisSize*numQR;
+eigs/main_iter.c:      hU         = rwork; rwork += primme->maxBasisSize*primme->maxBasisSize*numQR;
+eigs/main_iter.c:      cpu_Q          = cpu_rwork; cpu_rwork += primme->ldOPs*primme->maxBasisSize*numQR;
+eigs/main_iter.c:      cpu_R          = cpu_rwork; cpu_rwork += primme->maxBasisSize*primme->maxBasisSize*numQR;
+eigs/main_iter.c:      cpu_hU         = cpu_rwork; cpu_rwork += primme->maxBasisSize*primme->maxBasisSize*numQR;
+eigs/main_iter.c:   if (primme->projectionParams.projection == primme_proj_harmonic) {
+eigs/main_iter.c:      cpu_QtV        = cpu_rwork; cpu_rwork += primme->maxBasisSize*primme->maxBasisSize*numQR;
+eigs/main_iter.c:	 QtV        = rwork; rwork += primme->maxBasisSize*primme->maxBasisSize*numQR;
+eigs/main_iter.c:   cpu_H             = cpu_rwork; cpu_rwork += primme->maxBasisSize*primme->maxBasisSize;
+eigs/main_iter.c:   cpu_hVecs         = cpu_rwork; cpu_rwork += primme->maxBasisSize*primme->maxBasisSize;
+eigs/main_iter.c:   cpu_previousHVecs = cpu_rwork; cpu_rwork += primme->maxBasisSize*primme->restartingParams.maxPrevRetain;
+eigs/main_iter.c:   H             = rwork; rwork += primme->maxBasisSize*primme->maxBasisSize;
+eigs/main_iter.c:   hVecs         = rwork; rwork += primme->maxBasisSize*primme->maxBasisSize;
+eigs/main_iter.c:   previousHVecs = rwork; rwork += primme->maxBasisSize*primme->restartingParams.maxPrevRetain;
+eigs/main_iter.c:   if (primme->projectionParams.projection == primme_proj_refined
+eigs/main_iter.c:       || primme->projectionParams.projection == primme_proj_harmonic) {
+eigs/main_iter.c:      hVecsRot   = rwork; rwork += primme->maxBasisSize*primme->maxBasisSize*numQR;
+eigs/main_iter.c:	 cpu_hVecsRot   = cpu_rwork; cpu_rwork += primme->maxBasisSize*primme->maxBasisSize*numQR;
+eigs/main_iter.c:   if (primme->correctionParams.precondition && 
+eigs/main_iter.c:         primme->correctionParams.maxInnerIterations != 0 &&
+eigs/main_iter.c:         primme->correctionParams.projectors.RightQ &&
+eigs/main_iter.c:         primme->correctionParams.projectors.SkewQ           ) {
+eigs/main_iter.c:      ldevecsHat = primme->nLocal;
+eigs/main_iter.c:   cpu_hVals         = (PRIMME_REAL *)cpu_rwork; cpu_rwork += TO_REAL(primme->maxBasisSize);
+eigs/main_iter.c:   hVals         = (PRIMME_REAL *)rwork; rwork += TO_REAL(primme->maxBasisSize);
+eigs/main_iter.c:      hSVals     = (PRIMME_REAL *)rwork; rwork += TO_REAL(primme->maxBasisSize);
+eigs/main_iter.c:      cpu_hSVals     = (PRIMME_REAL *)cpu_rwork; cpu_rwork += TO_REAL(primme->maxBasisSize);
+eigs/main_iter.c:   prevRitzVals  = (PRIMME_REAL *)rwork; rwork += TO_REAL(primme->maxBasisSize+primme->numEvals);
+eigs/main_iter.c:   blockNorms    = (PRIMME_REAL *)rwork; rwork += TO_REAL(primme->maxBlockSize);
+eigs/main_iter.c:   cpu_prevRitzVals  = (PRIMME_REAL *)cpu_rwork; cpu_rwork += TO_REAL(primme->maxBasisSize+primme->numEvals);
+eigs/main_iter.c:   cpu_blockNorms    = (PRIMME_REAL *)cpu_rwork; cpu_rwork += TO_REAL(primme->maxBlockSize);
+eigs/main_iter.c:   rworkSize     = primme->realWorkSize/sizeof(SCALAR) - (cpu_rwork - (SCALAR*)realWork);
+eigs/main_iter.c:   //rworkSize = primme->realWorkSize/sizeof(SCALAR) - (rwork-(SCALAR*)primme->gpu_realWork);
+eigs/main_iter.c:   iev = flags + primme->maxBasisSize;
+eigs/main_iter.c:   ipivot = iev + primme->maxBlockSize;
+eigs/main_iter.c:   iworkSize = (int)(primme->intWorkSize/sizeof(int)) - primme->maxBasisSize
+eigs/main_iter.c:      - primme->maxBlockSize - maxEvecsSize;
+eigs/main_iter.c:   primme->stats.numOuterIterations = 0;
+eigs/main_iter.c:   primme->stats.numRestarts = 0;
+eigs/main_iter.c:   primme->stats.numMatvecs = 0;
+eigs/main_iter.c:   primme->stats.elapsedTime = 0.0;
+eigs/main_iter.c:   primme->stats.timeMatvec = 0.0;
+eigs/main_iter.c:   primme->stats.timePrecond = 0.0;
+eigs/main_iter.c:   primme->stats.timeOrtho = 0.0;
+eigs/main_iter.c:   primme->stats.timeGlobalSum = 0.0;
+eigs/main_iter.c:   primme->stats.volumeGlobalSum = 0.0;
+eigs/main_iter.c:   primme->stats.numOrthoInnerProds = 0.0;
+eigs/main_iter.c:   primme->stats.estimateMaxEVal   = -HUGE_VAL;
+eigs/main_iter.c:   primme->stats.estimateMinEVal   = HUGE_VAL;
+eigs/main_iter.c:   primme->stats.estimateLargestSVal = -HUGE_VAL;
+eigs/main_iter.c:   primme->stats.maxConvTol        = 0.0L;
+eigs/main_iter.c:   primme->stats.estimateResidualError = 0.0L;
+eigs/main_iter.c:   for (i=0; i<primme->numEvals; i++) perm[i] = i;
+eigs/main_iter.c:   if (primme->numEvals == 0) {
+eigs/main_iter.c:      primme->initSize = 0;
+eigs/main_iter.c:   if (primme->n == 1) {
+eigs/main_iter.c:      primme->matrix = primme->cpu_matrix;
+eigs/main_iter.c:      CHKERR(matrixMatvec_Sprimme(&evecs[0], primme->nLocal, ldevecs,
+eigs/main_iter.c:      CHKERR(matrixMatvec_Sprimme(&evecs[0], primme->nLocal, ldevecs,
+eigs/main_iter.c:      primme->stats.numMatvecs++;
+eigs/main_iter.c:      primme->initSize = 1;
+eigs/main_iter.c:       primme->matrix = primme->gpu_matrix;
+eigs/main_iter.c:       magma_free(primme->gpu_matrix);
+eigs/main_iter.c:       magma_queue_destroy(primme->queue);
+eigs/main_iter.c:   if (primme->n == 2) {
+eigs/main_iter.c:      primme->minRestartSize = 2;
+eigs/main_iter.c:      primme->restartingParams.maxPrevRetain = 0;
+eigs/main_iter.c:   magma_getvector(1,primme->realWorkSize,primme->gpu_realWork,1,primme->realWork,1,primme->queue);
+eigs/main_iter.c:   primme->matrix = primme->cpu_matrix;
+eigs/main_iter.c:   if (primme->projectionParams.projection == primme_proj_harmonic) {
+eigs/main_iter.c:   if (primme->projectionParams.projection == primme_proj_refined
+eigs/main_iter.c:       || primme->projectionParams.projection == primme_proj_harmonic) {
+eigs/main_iter.c:   if (primme->correctionParams.precondition && 
+eigs/main_iter.c:         primme->correctionParams.maxInnerIterations != 0 &&
+eigs/main_iter.c:         primme->correctionParams.projectors.RightQ &&
+eigs/main_iter.c:         primme->correctionParams.projectors.SkewQ           ) {
+eigs/main_iter.c:   CHKERR(init_basis_Sprimme(V, primme->nLocal, ldV, W, ldW, evecs, ldevecs,
+eigs/main_iter.c:            evecsHat, primme->nLocal, M, maxEvecsSize, UDU, 0, ipivot, machEps,
+eigs/main_iter.c:   primme->initSize = 0;
+eigs/main_iter.c:   if (primme->dynamicMethodSwitch > 0) {
+eigs/main_iter.c:      CostModel.MV = primme->stats.timeMatvec/primme->stats.numMatvecs;
+eigs/main_iter.c:      if (primme->numEvals < 5)
+eigs/main_iter.c:         primme->dynamicMethodSwitch = 1;   /* Start tentatively GD+k */
+eigs/main_iter.c:         primme->dynamicMethodSwitch = 3;   /* Start GD+k for 1st pair */
+eigs/main_iter.c:      primme->correctionParams.maxInnerIterations = 0; 
+eigs/main_iter.c:          ( primme->maxMatvecs == 0 || 
+eigs/main_iter.c:            primme->stats.numMatvecs < primme->maxMatvecs ) &&
+eigs/main_iter.c:          ( primme->maxOuterIterations == 0 ||
+eigs/main_iter.c:            primme->stats.numOuterIterations < primme->maxOuterIterations) ) {
+eigs/main_iter.c:      primme->initSize = numConverged = numConvergedStored = 0;
+eigs/main_iter.c:      for (i=0; i<primme->maxBasisSize; i++)
+eigs/main_iter.c:      if (Q) CHKERR(update_Q_Sprimme(V, primme->nLocal, ldV, W, ldW, Q, ldQ, R,
+eigs/main_iter.c:               primme->maxBasisSize, primme->targetShifts[targetShiftIndex], 0,
+eigs/main_iter.c:               primme->maxBasisSize, primme->nLocal, 0, basisSize, rwork,
+eigs/main_iter.c:               primme->maxBasisSize, primme->nLocal, 0, basisSize, rwork,
+eigs/main_iter.c:      CHKERR(solve_H_Sprimme(H, basisSize, primme->maxBasisSize, R,
+eigs/main_iter.c:               primme->maxBasisSize, QtV, primme->maxBasisSize, hU, basisSize,
+eigs/main_iter.c:      while (numConverged < primme->numEvals &&
+eigs/main_iter.c:             ( primme->maxMatvecs == 0 || 
+eigs/main_iter.c:               primme->stats.numMatvecs < primme->maxMatvecs ) &&
+eigs/main_iter.c:             ( primme->maxOuterIterations == 0 ||
+eigs/main_iter.c:               primme->stats.numOuterIterations < primme->maxOuterIterations) ) {
+eigs/main_iter.c:         while (basisSize < primme->maxBasisSize &&
+eigs/main_iter.c:                basisSize < primme->n - primme->numOrthoConst - numLocked &&
+eigs/main_iter.c:                ( primme->maxMatvecs == 0 || 
+eigs/main_iter.c:                  primme->stats.numMatvecs < primme->maxMatvecs) &&
+eigs/main_iter.c:                ( primme->maxOuterIterations == 0 ||
+eigs/main_iter.c:                  primme->stats.numOuterIterations < primme->maxOuterIterations) ) {
+eigs/main_iter.c:            primme->stats.numOuterIterations++;
+eigs/main_iter.c:            if (primme->numTargetShifts > numConverged+1 && Q) {
+eigs/main_iter.c:               availableBlockSize = primme->maxBlockSize;
+eigs/main_iter.c:               maxRecentlyConverged = primme->numEvals-numConverged;
+eigs/main_iter.c:            availableBlockSize = min(availableBlockSize, primme->maxBasisSize-basisSize);
+eigs/main_iter.c:                  primme->n - basisSize - numLocked - primme->numOrthoConst);
+eigs/main_iter.c:               prepare_candidates_Sprimme(V, ldV, W, ldW, primme->nLocal, H,
+eigs/main_iter.c:                  primme->maxBasisSize, basisSize,
+eigs/main_iter.c:                  hVecsRot, primme->maxBasisSize, &reset, rwork, &rworkSize,
+eigs/main_iter.c:            if (numConverged >= primme->numEvals ||
+eigs/main_iter.c:                (primme->locking && recentlyConverged > 0
+eigs/main_iter.c:                  && primme->target != primme_smallest
+eigs/main_iter.c:                  && primme->target != primme_largest
+eigs/main_iter.c:                  && primme->projectionParams.projection == primme_proj_RR) ||
+eigs/main_iter.c:                (Q && primme->targetShifts[targetShiftIndex] !=
+eigs/main_iter.c:                  primme->targetShifts[
+eigs/main_iter.c:                     min(primme->numTargetShifts-1, numConverged)])
+eigs/main_iter.c:               || (numConverged >= nextGuess-primme->numOrthoConst
+eigs/main_iter.c:               Num_scal_Sprimme(blockSize*primme->nLocal, 0.0,
+eigs/main_iter.c:               if (primme->dynamicMethodSwitch > 0) {
+eigs/main_iter.c:                  if (recentlyConverged > 0 || primme->dynamicMethodSwitch == 2)
+eigs/main_iter.c:                        primme->stats.timeMatvec/primme->stats.numMatvecs;
+eigs/main_iter.c:                        primme->stats.estimateLargestSVal); 
+eigs/main_iter.c:                     if (ret) switch (primme->dynamicMethodSwitch) {
+eigs/main_iter.c:               if (primme->dynamicMethodSwitch > 0) 
+eigs/main_iter.c:               primme->numOrthoConst+numLocked, primme->nLocal, primme->iseed, 
+eigs/main_iter.c:            CHKERR(matrixMatvec_Sprimme(V, primme->nLocal, ldV, W, ldW,
+eigs/main_iter.c:            if (Q) CHKERR(update_Q_Sprimme(V, primme->nLocal, ldV, W, ldW, Q,
+eigs/main_iter.c:                     ldQ, R, primme->maxBasisSize,
+eigs/main_iter.c:                     primme->targetShifts[targetShiftIndex], basisSize,
+eigs/main_iter.c:                     primme->maxBasisSize, primme->nLocal, basisSize, blockSize,
+eigs/main_iter.c:                     primme->maxBasisSize, primme->nLocal, basisSize, blockSize,
+eigs/main_iter.c:            if (basisSize+blockSize >= primme->maxBasisSize) {
+eigs/main_iter.c:                        primme->maxBasisSize, primme->maxBasisSize, basisSize,
+eigs/main_iter.c:            CHKERR(solve_H_Sprimme(H, basisSize, primme->maxBasisSize, R,
+eigs/main_iter.c:                     primme->maxBasisSize, QtV, primme->maxBasisSize, hU,
+eigs/main_iter.c:            if (primme->projectionParams.projection == primme_proj_refined &&
+eigs/main_iter.c:                  fabs(primme->targetShifts[targetShiftIndex]-hVals[0])
+eigs/main_iter.c:                    -max(primme->aNorm, primme->stats.estimateLargestSVal)
+eigs/main_iter.c:               if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/main_iter.c:                  fprintf(primme->outputFile, 
+eigs/main_iter.c:                  fflush(primme->outputFile);
+eigs/main_iter.c:         wholeSpace = basisSize >= primme->n - primme->numOrthoConst - numLocked;
+eigs/main_iter.c:            else if (primme->numTargetShifts > numConverged+1) {
+eigs/main_iter.c:               if (primme->locking) {
+eigs/main_iter.c:                     max(min(primme->numEvals, numLocked+1) - numConverged, 0);
+eigs/main_iter.c:               maxRecentlyConverged = primme->numEvals-numConverged;
+eigs/main_iter.c:               availableBlockSize = min(primme->maxBlockSize, primme->maxBasisSize-(numConverged-numLocked));
+eigs/main_iter.c:                  primme->n - basisSize - numLocked - primme->numOrthoConst);
+eigs/main_iter.c:            if (primme->target == primme_closest_abs ||
+eigs/main_iter.c:                  primme->target == primme_largest_abs) {
+eigs/main_iter.c:            prepare_candidates_Sprimme(V, ldV, W, ldW, primme->nLocal, H,
+eigs/main_iter.c:                  primme->maxBasisSize, basisSize,
+eigs/main_iter.c:                  hVecsRot, primme->maxBasisSize, &reset, rwork, &rworkSize,
+eigs/main_iter.c:                  && primme->numTargetShifts > numLocked+1) {
+eigs/main_iter.c:               if (flags[i] != UNCONVERGED && numConverged < primme->numEvals
+eigs/main_iter.c:                     && (i < primme->numEvals-numLocked
+eigs/main_iter.c:                        || primme->target == primme_closest_geq
+eigs/main_iter.c:                        || primme->target == primme_closest_leq)) {
+eigs/main_iter.c:               Num_zero_matrix_Sprimme(&hVecsRot[numArbitraryVecs*primme->maxBasisSize], primme->maxBasisSize,
+eigs/main_iter.c:                     basisSize-numArbitraryVecs, primme->maxBasisSize);
+eigs/main_iter.c:                  hVecsRot[primme->maxBasisSize*i+i] = 1.0;
+eigs/main_iter.c:               permute_vecs_Sprimme(hVecsRot, basisSize, basisSize, primme->maxBasisSize, iwork, rwork, iwork+basisSize);
+eigs/main_iter.c:         restart_Sprimme(V, W, primme->nLocal, basisSize, ldV, hVals, hSVals,
+eigs/main_iter.c:               evals, resNorms, evecsHat, primme->nLocal, M, maxEvecsSize, UDU,
+eigs/main_iter.c:               previousHVecs, &numPrevRetained, primme->maxBasisSize,
+eigs/main_iter.c:               primme->maxBasisSize, Q, ldQ, R, primme->maxBasisSize,
+eigs/main_iter.c:               QtV, primme->maxBasisSize, hU, basisSize, 0, hVecs, basisSize, 0,
+eigs/main_iter.c:               primme->maxBasisSize, &restartsSinceReset, &reset, machEps,
+eigs/main_iter.c:                     primme->minRestartSize + numConverged 
+eigs/main_iter.c:                     - (nextGuess - primme->numOrthoConst), numGuesses));
+eigs/main_iter.c:                  min(basisSize+numNew, primme->maxBasisSize) - basisSize);
+eigs/main_iter.c:                  min(basisSize+numNew+primme->numOrthoConst+numLocked,
+eigs/main_iter.c:                     primme->n)
+eigs/main_iter.c:                  - primme->numOrthoConst - numLocked - basisSize);
+eigs/main_iter.c:            Num_copy_matrix_Sprimme(&evecs[nextGuess*ldevecs], primme->nLocal,
+eigs/main_iter.c:                     evecs, ldevecs, numLocked+primme->numOrthoConst,
+eigs/main_iter.c:                     primme->nLocal, primme->iseed, machEps, rwork, &rworkSize,
+eigs/main_iter.c:            CHKERR(matrixMatvec_Sprimme(V, primme->nLocal, ldV, W, ldW,
+eigs/main_iter.c:            if (Q) CHKERR(update_Q_Sprimme(V, primme->nLocal, ldV, W, ldW, Q,
+eigs/main_iter.c:                     ldQ, R, primme->maxBasisSize,
+eigs/main_iter.c:                     primme->targetShifts[targetShiftIndex], basisSize, numNew,
+eigs/main_iter.c:                     primme->maxBasisSize, primme->nLocal, basisSize, numNew,
+eigs/main_iter.c:                     primme->maxBasisSize, primme->nLocal, basisSize, numNew,
+eigs/main_iter.c:            CHKERR(solve_H_Sprimme(H, basisSize, primme->maxBasisSize, R,
+eigs/main_iter.c:                  primme->maxBasisSize, QtV, primme->maxBasisSize, hU,
+eigs/main_iter.c:         primme->stats.numRestarts++;
+eigs/main_iter.c:         primme->initSize = numConverged;
+eigs/main_iter.c:         if (primme->dynamicMethodSwitch == 1 ) {
+eigs/main_iter.c:            CostModel.MV = primme->stats.timeMatvec/primme->stats.numMatvecs;
+eigs/main_iter.c:               numConverged, blockNorms[0], primme->stats.estimateMaxEVal); 
+eigs/main_iter.c:      } /* while ((numConverged < primme->numEvals)  (restarting loop)
+eigs/main_iter.c:      if (primme->locking) {
+eigs/main_iter.c:         if (primme->dynamicMethodSwitch > 0 ) {
+eigs/main_iter.c:               primme->dynamicMethodSwitch = -2;  /* Use JDQMR_ETol */
+eigs/main_iter.c:               primme->dynamicMethodSwitch = -1;  /* Use GD+k */
+eigs/main_iter.c:               primme->dynamicMethodSwitch = -3;  /* Close call. Use dynamic */
+eigs/main_iter.c:         if (numConverged == primme->numEvals || wholeSpace) {
+eigs/main_iter.c:            if (primme->aNorm <= 0.0L) primme->aNorm = primme->stats.estimateLargestSVal;
+eigs/main_iter.c:         restartLimitReached = primme->maxMatvecs > 0 && 
+eigs/main_iter.c:                               primme->stats.numMatvecs >= primme->maxMatvecs;
+eigs/main_iter.c:            for (i=0; i < primme->numEvals; i++) {
+eigs/main_iter.c:            Num_copy_matrix_Sprimme(V, primme->nLocal, primme->numEvals, ldV,
+eigs/main_iter.c:               &evecs[ldevecs*primme->numOrthoConst], ldevecs);
+eigs/main_iter.c:            primme->initSize = numConverged;
+eigs/main_iter.c:            if (primme->dynamicMethodSwitch > 0 ) {
+eigs/main_iter.c:                  primme->dynamicMethodSwitch = -2;  /* Use JDQMR_ETol */
+eigs/main_iter.c:                  primme->dynamicMethodSwitch = -1;  /* Use GD+k */
+eigs/main_iter.c:                  primme->dynamicMethodSwitch = -3;  /* Close call.Use dynamic*/
+eigs/main_iter.c:               if (primme->aNorm <= 0.0L) primme->aNorm = primme->stats.estimateLargestSVal;
+eigs/main_iter.c:                     primme->numOrthoConst+numLocked, primme->nLocal,
+eigs/main_iter.c:                     primme->iseed, machEps, rwork, &rworkSize, primme), -1);
+eigs/main_iter.c:            CHKERR(matrixMatvec_Sprimme(V, primme->nLocal, ldV, W, ldW, 0,
+eigs/main_iter.c:            if (primme->printLevel >= 2 && primme->procID == 0) {
+eigs/main_iter.c:               fprintf(primme->outputFile, 
+eigs/main_iter.c:               fprintf(primme->outputFile, "Restarting at #MV %" PRIMME_INT_P "\n",
+eigs/main_iter.c:                 primme->stats.numMatvecs);
+eigs/main_iter.c:               fflush(primme->outputFile);
+eigs/main_iter.c:            primme->stats.estimateResidualError = 0.0;
+eigs/main_iter.c:   if (primme->aNorm <= 0.0L) primme->aNorm = primme->stats.estimateLargestSVal;
+eigs/main_iter.c:      magma_free(primme->gpu_matrix);
+eigs/main_iter.c:      magma_queue_destroy(primme->queue);
+eigs/main_iter.c:   targetShift = primme->targetShifts ? primme->targetShifts[targetShiftIndex] : 0.0;
+eigs/main_iter.c:         if ((primme->target == primme_closest_leq
+eigs/main_iter.c:               (primme->target == primme_closest_geq
+eigs/main_iter.c:                         && (iev[blki] < primme->numEvals-numLocked
+eigs/main_iter.c:                            || primme->target == primme_closest_geq
+eigs/main_iter.c:                            || primme->target == primme_closest_leq)) {
+eigs/main_iter.c:            if (!primme->locking) {
+eigs/main_iter.c:               if (primme->procID == 0 && primme->printLevel >= 2)
+eigs/main_iter.c:                  fprintf(primme->outputFile, 
+eigs/main_iter.c:                        blockNorms[blki], primme->stats.numMatvecs,
+eigs/main_iter.c:               primme->stats.maxConvTol = max(primme->stats.maxConvTol, blockNorms[blki]);
+eigs/main_iter.c: * rwork   Must be at least 2*primme->numEvals in size
+eigs/main_iter.c:      Num_axpy_Sprimme(primme->nLocal, -hVals[i], &V[ldV*i], 1, &W[ldW*i], 1);
+eigs/main_iter.c:      dwork[i] = REAL_PART(Num_dot_Sprimme(primme->nLocal, &W[ldW*i],
+eigs/main_iter.c:   CHKERR(check_convergence_Sprimme(V, primme->nLocal, ldV, W, ldW, NULL, 0,
+eigs/main_iter.c:   if (primme->printLevel >= 3 && primme->procID == 0) {
+eigs/main_iter.c:      if (primme->locking) 
+eigs/main_iter.c:         fprintf(primme->outputFile, 
+eigs/main_iter.c:         primme->stats.numOuterIterations, found, i, primme->stats.numMatvecs,
+eigs/main_iter.c:      fflush(primme->outputFile);
+eigs/main_iter.c:     If primme->dynamicMethodSwitch > 0 find which of GD+k,JDQMR is best
+eigs/main_iter.c: *    If primme->dynamicMethodSwitch=2,4 try to switch from JDQMR_ETol to GD+k.
+eigs/main_iter.c: *    primme->dynamicMethodSwitch = 2 
+eigs/main_iter.c: *    primme->dynamicMethodSwitch = 4 
+eigs/main_iter.c:   if (primme->dynamicMethodSwitch == 2) {
+eigs/main_iter.c:      if (primme->numProcs > 1) {
+eigs/main_iter.c:         ratio = globalRatio/primme->numProcs;
+eigs/main_iter.c:         primme->dynamicMethodSwitch = -1;
+eigs/main_iter.c:         primme->correctionParams.maxInnerIterations = 0;
+eigs/main_iter.c:         if (primme->printLevel >= 3 && primme->procID == 0) 
+eigs/main_iter.c:            fprintf(primme->outputFile, 
+eigs/main_iter.c:   switch (primme->dynamicMethodSwitch) {
+eigs/main_iter.c:   if (primme->numProcs > 1) {
+eigs/main_iter.c:      ratio = globalRatio/primme->numProcs;
+eigs/main_iter.c:      primme->dynamicMethodSwitch = switchto; 
+eigs/main_iter.c:      primme->correctionParams.maxInnerIterations = 0;
+eigs/main_iter.c:   if (primme->printLevel >= 3 && primme->procID == 0) 
+eigs/main_iter.c:      switch (primme->correctionParams.maxInnerIterations) {
+eigs/main_iter.c:         case 0: fprintf(primme->outputFile, 
+eigs/main_iter.c:         case -1: fprintf(primme->outputFile, 
+eigs/main_iter.c: *    If primme->dynamicMethodSwitch=1,3 try to switch from GD+k to JDQMR_ETol.
+eigs/main_iter.c: *    primme->dynamicMethodSwitch = 1
+eigs/main_iter.c: *    primme->dynamicMethodSwitch = 3 
+eigs/main_iter.c:   if (primme->stats.numRestarts == 0) return 0;
+eigs/main_iter.c:   switch (primme->dynamicMethodSwitch) {
+eigs/main_iter.c:      primme->dynamicMethodSwitch = switchto;
+eigs/main_iter.c:      primme->correctionParams.maxInnerIterations = -1;
+eigs/main_iter.c:      if (primme->printLevel >= 3 && primme->procID == 0) 
+eigs/main_iter.c:         fprintf(primme->outputFile, 
+eigs/main_iter.c:   if (primme->numProcs > 1) {
+eigs/main_iter.c:      ratio = globalRatio/primme->numProcs;
+eigs/main_iter.c:      primme->dynamicMethodSwitch = switchto;
+eigs/main_iter.c:      primme->correctionParams.maxInnerIterations = -1;
+eigs/main_iter.c:   if (primme->printLevel >= 3 && primme->procID == 0) 
+eigs/main_iter.c:      switch (primme->correctionParams.maxInnerIterations) {
+eigs/main_iter.c:         case 0: fprintf(primme->outputFile, 
+eigs/main_iter.c:         case -1: fprintf(primme->outputFile, 
+eigs/main_iter.c: *       If primme->dynamicMethodSwitch = 2, called before solve_correction()
+eigs/main_iter.c: *       If primme->dynamicMethodSwitch = 1, called after restart()
+eigs/main_iter.c:   kout = primme->stats.numOuterIterations - model->numIt_0;
+eigs/main_iter.c:   nMV  = primme->stats.numMatvecs - model->numMV_0;
+eigs/main_iter.c:   if (primme->correctionParams.maxInnerIterations == -1 && 
+eigs/main_iter.c:      if (primme->aNorm > 0.0L) 
+eigs/main_iter.c:         low_res = primme->eps*primme->aNorm;
+eigs/main_iter.c:         low_res = primme->eps*aNormEst;
+eigs/main_iter.c:      if (primme->correctionParams.maxInnerIterations == -1)
+eigs/main_iter.c:   switch (primme->dynamicMethodSwitch) {
+eigs/main_iter.c:   model->numIt_0 = primme->stats.numOuterIterations;
+eigs/main_iter.c:   model->numMV_0 = primme->stats.numMatvecs;
+eigs/main_iter.c:   model->numMV_0 = primme->stats.numMatvecs;
+eigs/main_iter.c:   model->numIt_0 = primme->stats.numOuterIterations+1;
+eigs/ortho.c:   messages = (primme && primme->procID == 0 && primme->printLevel >= 3
+eigs/ortho.c:         && primme->outputFile);
+eigs/ortho.c:               fprintf(primme->outputFile, "Randomizing in ortho: %d, vector size of %" PRIMME_INT_P "\n", i, nLocal);
+eigs/ortho.c:            if (primme) primme->stats.numOrthoInnerProds += 1;
+eigs/ortho.c:            if (primme) primme->stats.numOrthoInnerProds += i;
+eigs/ortho.c:            if (primme) primme->stats.numOrthoInnerProds += numLocked;
+eigs/ortho.c:            if (primme) primme->stats.numOrthoInnerProds += numLocked;
+eigs/ortho.c:            if (primme) primme->stats.numOrthoInnerProds += i;
+eigs/ortho.c:            if (primme) primme->stats.numOrthoInnerProds += 1;
+eigs/ortho.c:               fprintf(primme->outputFile, "Zeroing column %d\n", i);
+eigs/ortho.c:               fprintf(primme->outputFile, 
+eigs/ortho.c:                  if (primme) primme->stats.numOrthoInnerProds += 1;
+eigs/ortho.c:   if (primme) primme->stats.timeOrtho += primme_wTimer(0) - t0;
+eigs/primme.c: *            int primme->intWorkSize : bytes of int workspace needed
+eigs/primme.c: *       long int primme->realWorkSize: bytes of real workspace needed
+eigs/primme.c: *        primme->numEvals.
+eigs/primme.c: *        the array is at least primme->nLocal*primme->numEvals
+eigs/primme.c: *           size primme->numEvals
+eigs/primme.c:   if (primme->iseed[0]<0 || primme->iseed[0]>4095) primme->iseed[0] = 
+eigs/primme.c:      primme->procID % 4096;
+eigs/primme.c:   if (primme->iseed[1]<0 || primme->iseed[1]>4095) primme->iseed[1] = 
+eigs/primme.c:      (int)(primme->procID/4096+1) % 4096;
+eigs/primme.c:   if (primme->iseed[2]<0 || primme->iseed[2]>4095) primme->iseed[2] = 
+eigs/primme.c:      (int)((primme->procID/4096)/4096+2) % 4096;
+eigs/primme.c:   if (primme->iseed[3]<0 || primme->iseed[3]>4095) primme->iseed[3] = 
+eigs/primme.c:      (2*(int)(((primme->procID/4096)/4096)/4096)+1) % 4096;
+eigs/primme.c:   if (!primme->convTestFun) {
+eigs/primme.c:      primme->convTestFun = convTestFunAbsolute;
+eigs/primme.c:      if (primme->eps == 0.0) {
+eigs/primme.c:         primme->eps = machEps*1e4;
+eigs/primme.c:   CHKERRNOABORT(MALLOC_PRIMME(primme->numEvals, &perm), MALLOC_FAILURE);
+eigs/primme.c:   CHKERRNOABORT(main_iter_Sprimme(evals, perm, evecs, primme->ldevecs,
+eigs/primme.c:            resNorms, machEps, primme->intWork, primme->realWork, primme),
+eigs/primme.c:   assert(primme->realWorkSize >= sizeof(SCALAR)*primme->nLocal
+eigs/primme.c:         && primme->intWorkSize >= (int)sizeof(int)*primme->initSize);
+eigs/primme.c:   permute_vecs_Sprimme(&evecs[primme->numOrthoConst*primme->ldevecs],
+eigs/primme.c:         primme->nLocal, primme->initSize, primme->ldevecs, perm,
+eigs/primme.c:         (SCALAR*)primme->realWork, (int*)primme->intWork);
+eigs/primme.c:   primme->stats.elapsedTime = primme_wTimer(0);
+eigs/primme.c:   maxEvecsSize = primme->numOrthoConst + primme->numEvals;
+eigs/primme.c:   dataSize = primme->ldOPs*primme->maxBasisSize   /* Size of V            */
+eigs/primme.c:      + primme->ldOPs*primme->maxBasisSize         /* Size of W            */
+eigs/primme.c:      + primme->maxBasisSize*primme->maxBasisSize  /* Size of H            */
+eigs/primme.c:      + primme->maxBasisSize*primme->maxBasisSize  /* Size of hVecs        */
+eigs/primme.c:      + primme->restartingParams.maxPrevRetain*primme->maxBasisSize;
+eigs/primme.c:   if (primme->projectionParams.projection == primme_proj_harmonic ||
+eigs/primme.c:         primme->projectionParams.projection == primme_proj_refined) {
+eigs/primme.c:      dataSize += primme->ldOPs*primme->maxBasisSize     /* Size of Q      */
+eigs/primme.c:         + primme->maxBasisSize*primme->maxBasisSize     /* Size of R      */
+eigs/primme.c:         + primme->maxBasisSize*primme->maxBasisSize     /* Size of hU     */
+eigs/primme.c:         + primme->maxBasisSize*primme->maxBasisSize;    /* Size of hVecsRot */
+eigs/primme.c:      doubleSize += primme->maxBasisSize;                /* Size of hSVals */
+eigs/primme.c:   if (primme->projectionParams.projection == primme_proj_harmonic) {
+eigs/primme.c:            primme->maxBasisSize*primme->maxBasisSize;      /* Size of QtV */
+eigs/primme.c:   if ( (primme->correctionParams.precondition && 
+eigs/primme.c:         primme->correctionParams.maxInnerIterations != 0 &&
+eigs/primme.c:         primme->correctionParams.projectors.RightQ &&
+eigs/primme.c:         primme->correctionParams.projectors.SkewQ          ) ) {
+eigs/primme.c:         + primme->nLocal*maxEvecsSize             /* Size of evecsHat     */ 
+eigs/primme.c:   CHKERR(init_basis_Sprimme(NULL, primme->nLocal, 0, NULL, 0, NULL, 0,
+eigs/primme.c:            &primme->maxBasisSize, NULL, NULL, primme), -1);
+eigs/primme.c:   CHKERR(ortho_Sprimme(NULL, 0, NULL, 0, primme->maxBasisSize,
+eigs/primme.c:            primme->maxBasisSize+primme->maxBlockSize-1, NULL, primme->nLocal, 
+eigs/primme.c:            primme->locking?maxEvecsSize:primme->numOrthoConst+1, primme->nLocal,
+eigs/primme.c:   CHKERR(solve_H_Sprimme(NULL, primme->maxBasisSize, 0, NULL, 0, NULL, 0,
+eigs/primme.c:            primme->maxBasisSize, NULL, NULL, primme->maxBlockSize, NULL,
+eigs/primme.c:   CHKERR(restart_Sprimme(NULL, NULL, primme->nLocal, primme->maxBasisSize,
+eigs/primme.c:            0, NULL, NULL, NULL, NULL, &primme->maxBlockSize, NULL, NULL, 0,
+eigs/primme.c:            &primme->numEvals, &primme->numEvals, &primme->numEvals, NULL,
+eigs/primme.c:            &primme->restartingParams.maxPrevRetain, primme->maxBasisSize,
+eigs/primme.c:            primme->initSize, NULL, &primme->maxBasisSize, NULL,
+eigs/primme.c:            primme->maxBasisSize, NULL, 0, NULL, 0, NULL, 0, NULL, 0, 0, NULL,
+eigs/primme.c:            primme->maxBasisSize, NULL, &realWorkSize, 0, primme), -1);
+eigs/primme.c:   CHKERR(prepare_candidates_Sprimme(NULL, 0, NULL, 0, primme->nLocal, NULL, 0,
+eigs/primme.c:            primme->maxBasisSize, NULL, NULL, NULL, 0, NULL, NULL, NULL,
+eigs/primme.c:            primme->numEvals, NULL, 0, primme->maxBlockSize,
+eigs/primme.c:            NULL, primme->numEvals, 0, NULL, NULL, 0, 0.0, NULL,
+eigs/primme.c:            &primme->maxBlockSize, NULL, NULL, NULL, NULL, 0, NULL, NULL,
+eigs/primme.c:            0, 0, NULL, primme->maxBlockSize, NULL,
+eigs/primme.c:            &primme->restartingParams.maxPrevRetain, &intWorkSize, 0, primme),
+eigs/primme.c:   realWorkSize = max(realWorkSize, (size_t)2*primme->numEvals);
+eigs/primme.c:      + primme->maxBasisSize                       /* Size of hVals        */
+eigs/primme.c:      + primme->numEvals+primme->maxBasisSize      /* Size of prevRitzVals */
+eigs/primme.c:      + primme->maxBlockSize;                      /* Size of blockNorms   */
+eigs/primme.c:   intWorkSize += primme->maxBasisSize /* Size of flag               */
+eigs/primme.c:      + 2*primme->maxBlockSize         /* Size of iev and ilev       */
+eigs/primme.c:      primme->intWorkSize  = intWorkSize*sizeof(int);
+eigs/primme.c:      primme->realWorkSize = rworkByteSize;
+eigs/primme.c:   if (primme->realWork != NULL && primme->realWorkSize < rworkByteSize) {
+eigs/primme.c:   else if (primme->realWork == NULL) {
+eigs/primme.c:      primme->realWorkSize = rworkByteSize;
+eigs/primme.c:      if (primme->printLevel >= 5) fprintf(primme->outputFile, 
+eigs/primme.c:         "Allocating real workspace: %zd bytes\n", primme->realWorkSize);
+eigs/primme.c:   CHKERRM(MALLOC_PRIMME(rworkByteSize, (char**)&primme->realWork), MALLOC_FAILURE,
+eigs/primme.c:   if (primme->intWork != NULL
+eigs/primme.c:         && primme->intWorkSize < intWorkSize*(int)sizeof(int)) {
+eigs/primme.c:   else if (primme->intWork == NULL) {
+eigs/primme.c:      primme->intWorkSize = intWorkSize*sizeof(int);
+eigs/primme.c:      if (primme->printLevel >= 5) fprintf(primme->outputFile, 
+eigs/primme.c:         "Allocating integer workspace: %d bytes\n", primme->intWorkSize);
+eigs/primme.c:   CHKERRM(MALLOC_PRIMME(intWorkSize, &primme->intWork), MALLOC_FAILURE,
+eigs/primme.c:            "Failed to allocate %d bytes\n", primme->intWorkSize);
+eigs/primme.c:   else if (primme->n < 0 || primme->nLocal < 0 || primme->nLocal > primme->n) 
+eigs/primme.c:   else if (primme->numProcs < 1)
+eigs/primme.c:   else if (primme->matrixMatvec == NULL) 
+eigs/primme.c:   else if (primme->applyPreconditioner == NULL && 
+eigs/primme.c:            primme->correctionParams.precondition > 0 ) 
+eigs/primme.c:   else if (primme->numEvals > primme->n)
+eigs/primme.c:   else if (primme->numEvals < 0)
+eigs/primme.c:   else if (fabs(primme->eps) != 0.0L && primme->eps < MACHINE_EPSILON )
+eigs/primme.c:   else if ( primme->target != primme_smallest  &&
+eigs/primme.c:             primme->target != primme_largest  &&
+eigs/primme.c:             primme->target != primme_largest_abs  &&
+eigs/primme.c:             primme->target != primme_closest_geq  &&
+eigs/primme.c:             primme->target != primme_closest_leq  &&
+eigs/primme.c:             primme->target != primme_closest_abs    )
+eigs/primme.c:   else if (primme->numOrthoConst < 0 || primme->numOrthoConst > primme->n)
+eigs/primme.c:   else if (primme->maxBasisSize < 2 && primme->maxBasisSize != primme->n) 
+eigs/primme.c:   else if (primme->minRestartSize < 0 || (primme->minRestartSize == 0
+eigs/primme.c:                                    && primme->n > 2 && primme->numEvals > 0))
+eigs/primme.c:   else if (primme->maxBlockSize < 0
+eigs/primme.c:             || (primme->maxBlockSize == 0 && primme->numEvals > 0)) 
+eigs/primme.c:   else if (primme->restartingParams.maxPrevRetain < 0)
+eigs/primme.c:   else if (primme->restartingParams.scheme != primme_thick &&
+eigs/primme.c:            primme->restartingParams.scheme != primme_dtr)
+eigs/primme.c:   else if (primme->initSize < 0) 
+eigs/primme.c:   else if (primme->locking == 0 && primme->initSize > primme->maxBasisSize)
+eigs/primme.c:   else if (primme->locking > 0 && primme->initSize > primme->numEvals)
+eigs/primme.c:   else if (primme->minRestartSize + primme->restartingParams.maxPrevRetain 
+eigs/primme.c:                   >= primme->maxBasisSize && primme->n > primme->maxBasisSize)
+eigs/primme.c:   else if (primme->minRestartSize > primme->n && primme->n > 2)
+eigs/primme.c:   else if (primme->printLevel < 0 || primme->printLevel > 5)
+eigs/primme.c:   else if (primme->correctionParams.convTest != primme_full_LTolerance &&
+eigs/primme.c:            primme->correctionParams.convTest != primme_decreasing_LTolerance &&
+eigs/primme.c:            primme->correctionParams.convTest != primme_adaptive_ETolerance &&
+eigs/primme.c:            primme->correctionParams.convTest != primme_adaptive )
+eigs/primme.c:   else if (primme->correctionParams.convTest == primme_decreasing_LTolerance &&
+eigs/primme.c:            primme->correctionParams.relTolBase <= 1.0L ) 
+eigs/primme.c:   else if (primme->locking == 0 && primme->minRestartSize < primme->numEvals &&
+eigs/primme.c:            primme->n > 2)
+eigs/primme.c:   else if (primme->ldevecs < primme->nLocal)
+eigs/primme.c:   else if (primme->ldOPs != 0 && primme->ldOPs < primme->nLocal)
+eigs/primme.c:   else if (primme->locking == 0
+eigs/primme.c:         && (primme->target == primme_closest_leq
+eigs/primme.c:            || primme->target == primme_closest_geq))
+eigs/primme.c:   else if ( primme->target == primme_largest_abs ||
+eigs/primme.c:             primme->target == primme_closest_geq ||
+eigs/primme.c:             primme->target == primme_closest_leq ||
+eigs/primme.c:             primme->target == primme_closest_abs   ) {
+eigs/primme.c:      if (primme->numTargetShifts <= 0) {
+eigs/primme.c:      else if (primme->targetShifts == NULL ) {
+eigs/primme.c:   const double aNorm = (primme->aNorm > 0.0) ?
+eigs/primme.c:      primme->aNorm : primme->stats.estimateLargestSVal;
+eigs/primme.c:               primme->eps * aNorm,
+eigs/primme.c:               machEps * 3.16 * primme->stats.estimateLargestSVal);
+eigs/primme_f77.c: * Eg the label int for:    primme->correctionParams.projectors.LeftX
+eigs/primme_f77.c: * Eg the label int for:    primme->correctionParams.projectors.LeftX
+eigs/primme_f77.c: *   of the array primme->ShiftsForPreconditioner
+eigs/primme_f77.c:   *shift = primme->ShiftsForPreconditioner[*i-1];
+eigs/primme_interface.c:   primme->n                       = 0;
+eigs/primme_interface.c:   primme->numEvals                = 1;
+eigs/primme_interface.c:   primme->target                  = primme_smallest;
+eigs/primme_interface.c:   primme->aNorm                   = 0.0L;
+eigs/primme_interface.c:   primme->eps                     = 0.0;
+eigs/primme_interface.c:   primme->matrixMatvec            = NULL;
+eigs/primme_interface.c:   primme->applyPreconditioner     = NULL;
+eigs/primme_interface.c:   primme->massMatrixMatvec        = NULL;
+eigs/primme_interface.c:   primme->numTargetShifts         = 0;
+eigs/primme_interface.c:   primme->targetShifts            = NULL;
+eigs/primme_interface.c:   primme->numProcs                = 1;
+eigs/primme_interface.c:   primme->procID                  = 0;
+eigs/primme_interface.c:   primme->nLocal                  = 0;
+eigs/primme_interface.c:   primme->commInfo                = NULL;
+eigs/primme_interface.c:   primme->globalSumReal           = NULL;
+eigs/primme_interface.c:   primme->initSize                = 0;
+eigs/primme_interface.c:   primme->numOrthoConst           = 0;
+eigs/primme_interface.c:   primme->projectionParams.projection = primme_proj_default;
+eigs/primme_interface.c:   primme->initBasisMode                       = primme_init_default;
+eigs/primme_interface.c:   primme->locking                             = -1;
+eigs/primme_interface.c:   primme->dynamicMethodSwitch                 = -1;
+eigs/primme_interface.c:   primme->maxBasisSize                        = 0;
+eigs/primme_interface.c:   primme->minRestartSize                      = 0;
+eigs/primme_interface.c:   primme->maxBlockSize                        = 0;
+eigs/primme_interface.c:   primme->maxMatvecs                          = INT_MAX;
+eigs/primme_interface.c:   primme->maxOuterIterations                  = INT_MAX;
+eigs/primme_interface.c:   primme->restartingParams.scheme             = primme_thick;
+eigs/primme_interface.c:   primme->restartingParams.maxPrevRetain      = -1;
+eigs/primme_interface.c:   primme->correctionParams.precondition       = -1;
+eigs/primme_interface.c:   primme->correctionParams.robustShifts       = 0;
+eigs/primme_interface.c:   primme->correctionParams.maxInnerIterations = -INT_MAX;
+eigs/primme_interface.c:   primme->correctionParams.projectors.LeftQ   = 0;
+eigs/primme_interface.c:   primme->correctionParams.projectors.LeftX   = 0;
+eigs/primme_interface.c:   primme->correctionParams.projectors.RightQ  = 0;
+eigs/primme_interface.c:   primme->correctionParams.projectors.RightX  = 0;
+eigs/primme_interface.c:   primme->correctionParams.projectors.SkewQ   = 0;
+eigs/primme_interface.c:   primme->correctionParams.projectors.SkewX   = 0;
+eigs/primme_interface.c:   primme->correctionParams.relTolBase         = 0;
+eigs/primme_interface.c:   primme->correctionParams.convTest           = primme_adaptive_ETolerance;
+eigs/primme_interface.c:   primme->outputFile              = stdout;
+eigs/primme_interface.c:   primme->printLevel              = 1;
+eigs/primme_interface.c:   primme->stats.numOuterIterations= 0;
+eigs/primme_interface.c:   primme->stats.numRestarts       = 0;
+eigs/primme_interface.c:   primme->stats.numMatvecs        = 0;
+eigs/primme_interface.c:   primme->stats.numPreconds       = 0;
+eigs/primme_interface.c:   primme->stats.volumeGlobalSum   = 0;
+eigs/primme_interface.c:   primme->stats.numOrthoInnerProds= 0.0;
+eigs/primme_interface.c:   primme->stats.elapsedTime       = 0.0;
+eigs/primme_interface.c:   primme->stats.timeMatvec        = 0.0;
+eigs/primme_interface.c:   primme->stats.timePrecond       = 0.0;
+eigs/primme_interface.c:   primme->stats.timeGlobalSum     = 0.0;
+eigs/primme_interface.c:   primme->stats.estimateMaxEVal   = -HUGE_VAL;
+eigs/primme_interface.c:   primme->stats.estimateMinEVal   = HUGE_VAL;
+eigs/primme_interface.c:   primme->stats.estimateLargestSVal = -HUGE_VAL;
+eigs/primme_interface.c:   primme->stats.maxConvTol        = 0.0L;
+eigs/primme_interface.c:   primme->matrix                  = NULL;
+eigs/primme_interface.c:   primme->preconditioner          = NULL;
+eigs/primme_interface.c:   primme->iseed[0] = -1;   /* To set iseed, we first need procID           */
+eigs/primme_interface.c:   primme->iseed[1] = -1;   /* Thus we set all iseeds to -1                 */
+eigs/primme_interface.c:   primme->iseed[2] = -1;   /* Unless users provide their own iseeds,       */
+eigs/primme_interface.c:   primme->iseed[3] = -1;   /* PRIMME will set thse later uniquely per proc */
+eigs/primme_interface.c:   primme->intWorkSize             = 0;
+eigs/primme_interface.c:   primme->realWorkSize            = 0;
+eigs/primme_interface.c:   primme->intWork                 = NULL;
+eigs/primme_interface.c:   primme->realWork                = NULL;
+eigs/primme_interface.c:   primme->ShiftsForPreconditioner = NULL;
+eigs/primme_interface.c:   primme->convTestFun             = NULL;
+eigs/primme_interface.c:   primme->ldevecs                 = 0;
+eigs/primme_interface.c:   primme->ldOPs                   = 0;
+eigs/primme_interface.c:   free(primme->intWork);
+eigs/primme_interface.c:   free(primme->realWork);
+eigs/primme_interface.c:   primme->intWorkSize  = 0;
+eigs/primme_interface.c:   primme->realWorkSize = 0;
+eigs/primme_interface.c:      if (primme->target == primme_smallest || primme->target == primme_largest) {
+eigs/primme_interface.c:      if (primme->target == primme_smallest || primme->target == primme_largest) {
+eigs/primme_interface.c:      primme->dynamicMethodSwitch = 1;
+eigs/primme_interface.c:      primme->dynamicMethodSwitch = 0;
+eigs/primme_interface.c:   if (primme->maxBlockSize == 0) {
+eigs/primme_interface.c:      primme->maxBlockSize = 1;
+eigs/primme_interface.c:   if (primme->correctionParams.precondition == -1) {
+eigs/primme_interface.c:      primme->correctionParams.precondition = primme->applyPreconditioner ? 1 : 0;
+eigs/primme_interface.c:      primme->restartingParams.maxPrevRetain      = 0;
+eigs/primme_interface.c:      primme->correctionParams.precondition       = 0;
+eigs/primme_interface.c:      primme->correctionParams.maxInnerIterations = 0;
+eigs/primme_interface.c:      primme->restartingParams.maxPrevRetain      = 0;
+eigs/primme_interface.c:      primme->correctionParams.robustShifts       = 1;
+eigs/primme_interface.c:      primme->correctionParams.maxInnerIterations = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightX  = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewX   = 0;
+eigs/primme_interface.c:      if (primme->restartingParams.maxPrevRetain <= 0) {
+eigs/primme_interface.c:         if (primme->maxBlockSize == 1 && primme->numEvals > 1) {
+eigs/primme_interface.c:            primme->restartingParams.maxPrevRetain = 2;
+eigs/primme_interface.c:            primme->restartingParams.maxPrevRetain = primme->maxBlockSize;
+eigs/primme_interface.c:      primme->correctionParams.maxInnerIterations = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightX  = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewX   = 0;
+eigs/primme_interface.c:      if (primme->restartingParams.maxPrevRetain <= 0) {
+eigs/primme_interface.c:         if (primme->maxBlockSize == 1 && primme->numEvals > 1) {
+eigs/primme_interface.c:            primme->restartingParams.maxPrevRetain = 2;
+eigs/primme_interface.c:            primme->restartingParams.maxPrevRetain = primme->maxBlockSize;
+eigs/primme_interface.c:      primme->correctionParams.maxInnerIterations = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightX  = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewX   = 0;
+eigs/primme_interface.c:      if (primme->restartingParams.maxPrevRetain <= 0) {
+eigs/primme_interface.c:         if (primme->maxBlockSize == 1 && primme->numEvals > 1) {
+eigs/primme_interface.c:            primme->restartingParams.maxPrevRetain = 2;
+eigs/primme_interface.c:            primme->restartingParams.maxPrevRetain = primme->maxBlockSize;
+eigs/primme_interface.c:      primme->correctionParams.robustShifts       = 1;
+eigs/primme_interface.c:      primme->correctionParams.maxInnerIterations = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightX  = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewX   = 1;
+eigs/primme_interface.c:      primme->locking                             = 1;
+eigs/primme_interface.c:      primme->restartingParams.maxPrevRetain      = 0;
+eigs/primme_interface.c:      primme->correctionParams.robustShifts       = 1;
+eigs/primme_interface.c:      primme->correctionParams.maxInnerIterations = -1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.LeftQ   = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.LeftX   = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightQ  = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightX  = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewQ   = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewX   = 0;
+eigs/primme_interface.c:      primme->correctionParams.convTest           = primme_full_LTolerance;
+eigs/primme_interface.c:      primme->locking                             = 1;
+eigs/primme_interface.c:      primme->restartingParams.maxPrevRetain      = 1;
+eigs/primme_interface.c:      primme->correctionParams.robustShifts       = 0;
+eigs/primme_interface.c:      if (primme->correctionParams.maxInnerIterations == -INT_MAX) {
+eigs/primme_interface.c:         primme->correctionParams.maxInnerIterations = 10;
+eigs/primme_interface.c:      primme->correctionParams.projectors.LeftQ   = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.LeftX   = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightQ  = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightX  = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewQ   = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewX   = 1;
+eigs/primme_interface.c:      primme->correctionParams.relTolBase         = 1.5;
+eigs/primme_interface.c:      primme->correctionParams.convTest           = primme_full_LTolerance;
+eigs/primme_interface.c:      if (primme->restartingParams.maxPrevRetain < 0) {
+eigs/primme_interface.c:         primme->restartingParams.maxPrevRetain   = 1;
+eigs/primme_interface.c:      primme->correctionParams.maxInnerIterations = -1;
+eigs/primme_interface.c:      if (primme->correctionParams.precondition) {
+eigs/primme_interface.c:         primme->correctionParams.projectors.LeftQ   = 1;
+eigs/primme_interface.c:         primme->correctionParams.projectors.LeftQ   = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.LeftX   = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightQ  = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightX  = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewQ   = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewX   = 1;
+eigs/primme_interface.c:      primme->correctionParams.convTest           = primme_adaptive;
+eigs/primme_interface.c:      if (primme->restartingParams.maxPrevRetain < 0) {
+eigs/primme_interface.c:         primme->restartingParams.maxPrevRetain   = 1;
+eigs/primme_interface.c:      primme->correctionParams.maxInnerIterations = -1;
+eigs/primme_interface.c:      if (primme->correctionParams.precondition) {
+eigs/primme_interface.c:         primme->correctionParams.projectors.LeftQ   = 1;
+eigs/primme_interface.c:         primme->correctionParams.projectors.LeftQ   = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.LeftX   = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightQ  = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightX  = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewQ   = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewX   = 1;
+eigs/primme_interface.c:      primme->correctionParams.convTest           = primme_adaptive_ETolerance;
+eigs/primme_interface.c:      primme->locking                             = 1;
+eigs/primme_interface.c:      primme->maxBasisSize                        = primme->numEvals*2;
+eigs/primme_interface.c:      primme->minRestartSize                      = primme->numEvals;
+eigs/primme_interface.c:      primme->maxBlockSize                        = primme->numEvals;
+eigs/primme_interface.c:      primme->restartingParams.scheme             = primme_thick;
+eigs/primme_interface.c:      primme->restartingParams.maxPrevRetain      = 0;
+eigs/primme_interface.c:      primme->correctionParams.robustShifts       = 0;
+eigs/primme_interface.c:      primme->correctionParams.maxInnerIterations = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightX  = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewX   = 0;
+eigs/primme_interface.c:      primme->maxBasisSize                        = primme->numEvals*3;
+eigs/primme_interface.c:      primme->minRestartSize                      = primme->numEvals;
+eigs/primme_interface.c:      primme->maxBlockSize                        = primme->numEvals;
+eigs/primme_interface.c:      primme->restartingParams.maxPrevRetain      = primme->numEvals;
+eigs/primme_interface.c:      primme->restartingParams.scheme             = primme_thick;
+eigs/primme_interface.c:      primme->correctionParams.robustShifts       = 0;
+eigs/primme_interface.c:      primme->correctionParams.maxInnerIterations = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightX  = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewX   = 0;
+eigs/primme_interface.c:      if (primme->maxBlockSize == 1
+eigs/primme_interface.c:            && (primme->target == primme_closest_leq
+eigs/primme_interface.c:               || primme->target == primme_closest_geq)) {
+eigs/primme_interface.c:         primme->maxBasisSize                        = 4;
+eigs/primme_interface.c:         primme->minRestartSize                      = 2;
+eigs/primme_interface.c:         primme->restartingParams.maxPrevRetain      = 1;
+eigs/primme_interface.c:         primme->maxBasisSize                        = primme->maxBlockSize*3;
+eigs/primme_interface.c:         primme->minRestartSize                      = primme->maxBlockSize;
+eigs/primme_interface.c:         primme->restartingParams.maxPrevRetain      = primme->maxBlockSize;
+eigs/primme_interface.c:      primme->restartingParams.scheme             = primme_thick;
+eigs/primme_interface.c:      primme->correctionParams.robustShifts       = 0;
+eigs/primme_interface.c:      primme->correctionParams.maxInnerIterations = 0;
+eigs/primme_interface.c:      primme->correctionParams.projectors.RightX  = 1;
+eigs/primme_interface.c:      primme->correctionParams.projectors.SkewX   = 0;
+eigs/primme_interface.c:   if (primme->dynamicMethodSwitch < 0) {
+eigs/primme_interface.c:   if (primme->numProcs <= 1) {
+eigs/primme_interface.c:      primme->nLocal = primme->n;
+eigs/primme_interface.c:      primme->procID = 0;
+eigs/primme_interface.c:   if (primme->ldevecs == 0)
+eigs/primme_interface.c:      primme->ldevecs = primme->nLocal;
+eigs/primme_interface.c:   if (primme->projectionParams.projection == primme_proj_default)
+eigs/primme_interface.c:      primme->projectionParams.projection = primme_proj_RR;
+eigs/primme_interface.c:   if (primme->initBasisMode == primme_init_default)
+eigs/primme_interface.c:      primme->initBasisMode = primme_init_krylov;
+eigs/primme_interface.c:   if (primme->ldOPs == 0) {
+eigs/primme_interface.c:      primme->ldOPs = min(((primme->nLocal + PRIMME_BLOCK_SIZE - 1)
+eigs/primme_interface.c:               /PRIMME_BLOCK_SIZE)*PRIMME_BLOCK_SIZE, primme->nLocal);
+eigs/primme_interface.c:   if (primme->maxBasisSize == 0) {
+eigs/primme_interface.c:      if (primme->target==primme_smallest || primme->target==primme_largest)
+eigs/primme_interface.c:         primme->maxBasisSize   = min(primme->n, max(
+eigs/primme_interface.c:            max(15, 4*primme->maxBlockSize+primme->restartingParams.maxPrevRetain), 
+eigs/primme_interface.c:            (int) 2.5*primme->minRestartSize+primme->restartingParams.maxPrevRetain));
+eigs/primme_interface.c:         primme->maxBasisSize   = min(primme->n, max(
+eigs/primme_interface.c:            max(35, 5*primme->maxBlockSize+primme->restartingParams.maxPrevRetain),
+eigs/primme_interface.c:            (int) 1.7*primme->minRestartSize+primme->restartingParams.maxPrevRetain));
+eigs/primme_interface.c:   if (primme->minRestartSize == 0) {
+eigs/primme_interface.c:      if (primme->target==primme_smallest || primme->target==primme_largest)
+eigs/primme_interface.c:         primme->minRestartSize = (int) (0.5 + 0.4*primme->maxBasisSize);
+eigs/primme_interface.c:         primme->minRestartSize = (int) (0.5 + 0.6*primme->maxBasisSize);
+eigs/primme_interface.c:      if (primme->maxBlockSize > 1) {
+eigs/primme_interface.c:         if (primme->restartingParams.maxPrevRetain > 0) 
+eigs/primme_interface.c:            primme->minRestartSize = primme->maxBasisSize-primme->maxBlockSize*
+eigs/primme_interface.c:            (1 + (int) ((primme->maxBasisSize - primme->minRestartSize - 1 
+eigs/primme_interface.c:                         -primme->restartingParams.maxPrevRetain ) / (double) 
+eigs/primme_interface.c:            primme->maxBlockSize) ) - primme->restartingParams.maxPrevRetain ;
+eigs/primme_interface.c:            primme->minRestartSize = primme->maxBasisSize-primme->maxBlockSize*
+eigs/primme_interface.c:            (1 + (int) ((primme->maxBasisSize - primme->minRestartSize - 1)
+eigs/primme_interface.c:                        /(double) primme->maxBlockSize) );
+eigs/primme_interface.c:   if (primme->locking >= 0) {
+eigs/primme_interface.c:   else if (primme->target != primme_smallest && primme->target != primme_largest) {
+eigs/primme_interface.c:       primme->locking = 1;
+eigs/primme_interface.c:   else if (primme->numEvals > primme->minRestartSize) {
+eigs/primme_interface.c:      primme->locking = 1;
+eigs/primme_interface.c:      primme->locking = 0;   
+eigs/primme_interface.c:              v->int_v = primme->n;
+eigs/primme_interface.c:              v->matFunc_v = primme->matrixMatvec;
+eigs/primme_interface.c:              v->matFunc_v = primme->massMatrixMatvec;
+eigs/primme_interface.c:              v->matFunc_v = primme->applyPreconditioner;
+eigs/primme_interface.c:              v->int_v = primme->numProcs;
+eigs/primme_interface.c:              v->int_v = primme->procID;
+eigs/primme_interface.c:              v->ptr_v = primme->commInfo;
+eigs/primme_interface.c:              v->int_v = primme->nLocal;
+eigs/primme_interface.c:              v->globalSumRealFunc_v = primme->globalSumReal;
+eigs/primme_interface.c:              v->int_v = primme->numEvals;
+eigs/primme_interface.c:              v->target_v = primme->target;
+eigs/primme_interface.c:              v->int_v = primme->numTargetShifts;
+eigs/primme_interface.c:         for (i=0; i< primme->numTargetShifts; i++) {
+eigs/primme_interface.c:             (&v->double_v)[i] = primme->targetShifts[i];
+eigs/primme_interface.c:              v->int_v = primme->locking;
+eigs/primme_interface.c:              v->int_v = primme->initSize;
+eigs/primme_interface.c:              v->int_v = primme->numOrthoConst;
+eigs/primme_interface.c:              v->int_v = primme->dynamicMethodSwitch;
+eigs/primme_interface.c:              v->int_v = primme->maxBasisSize;
+eigs/primme_interface.c:              v->int_v = primme->minRestartSize;
+eigs/primme_interface.c:              v->int_v = primme->maxBlockSize;
+eigs/primme_interface.c:              v->int_v = primme->maxMatvecs;
+eigs/primme_interface.c:              v->int_v = primme->maxOuterIterations;
+eigs/primme_interface.c:              v->int_v = primme->intWorkSize;
+eigs/primme_interface.c:              v->int_v = primme->realWorkSize;
+eigs/primme_interface.c:            (&v->int_v)[i] = primme->iseed[i];
+eigs/primme_interface.c:              v->ptr_v = primme->intWork;
+eigs/primme_interface.c:              v->ptr_v = primme->realWork;
+eigs/primme_interface.c:              v->double_v = primme->aNorm;
+eigs/primme_interface.c:              v->double_v = primme->eps;
+eigs/primme_interface.c:              v->int_v = primme->printLevel;
+eigs/primme_interface.c:              v->file_v = primme->outputFile;
+eigs/primme_interface.c:              v->ptr_v = primme->matrix;
+eigs/primme_interface.c:              v->ptr_v = primme->preconditioner;
+eigs/primme_interface.c:              v->restartscheme_v = primme->restartingParams.scheme;
+eigs/primme_interface.c:              v->int_v = primme->restartingParams.maxPrevRetain;
+eigs/primme_interface.c:              v->int_v = primme->correctionParams.precondition;
+eigs/primme_interface.c:              v->int_v = primme->correctionParams.robustShifts;
+eigs/primme_interface.c:              v->int_v = primme->correctionParams.maxInnerIterations;
+eigs/primme_interface.c:              v->int_v = primme->correctionParams.projectors.LeftQ;
+eigs/primme_interface.c:              v->int_v = primme->correctionParams.projectors.LeftX;
+eigs/primme_interface.c:              v->int_v = primme->correctionParams.projectors.RightQ;
+eigs/primme_interface.c:              v->int_v = primme->correctionParams.projectors.RightX;
+eigs/primme_interface.c:              v->int_v = primme->correctionParams.projectors.SkewQ;
+eigs/primme_interface.c:              v->int_v = primme->correctionParams.projectors.SkewX;
+eigs/primme_interface.c:              v->convergencetest_v = primme->correctionParams.convTest;
+eigs/primme_interface.c:              v->double_v = primme->correctionParams.relTolBase;
+eigs/primme_interface.c:              v->int_v = primme->stats.numOuterIterations;
+eigs/primme_interface.c:              v->int_v = primme->stats.numRestarts;
+eigs/primme_interface.c:              v->int_v = primme->stats.numMatvecs;
+eigs/primme_interface.c:              v->int_v = primme->stats.numPreconds;
+eigs/primme_interface.c:              v->double_v = primme->stats.elapsedTime;
+eigs/primme_interface.c:              v->double_v = primme->stats.estimateMinEVal;
+eigs/primme_interface.c:              v->double_v = primme->stats.estimateMaxEVal;
+eigs/primme_interface.c:              v->double_v = primme->stats.estimateLargestSVal;
+eigs/primme_interface.c:              v->int_v = primme->ldevecs;
+eigs/primme_interface.c:              v->int_v = primme->ldOPs;
+eigs/primme_interface.c:              primme->n = *v.int_v;
+eigs/primme_interface.c:              primme->matrixMatvec = v.matFunc_v;
+eigs/primme_interface.c:              primme->massMatrixMatvec = v.matFunc_v;
+eigs/primme_interface.c:              primme->applyPreconditioner = v.matFunc_v;
+eigs/primme_interface.c:              primme->numProcs = (int)*v.int_v;
+eigs/primme_interface.c:              primme->procID = (int)*v.int_v;
+eigs/primme_interface.c:              primme->commInfo = v.ptr_v;
+eigs/primme_interface.c:              primme->nLocal = *v.int_v;
+eigs/primme_interface.c:              primme->globalSumReal = v.globalSumRealFunc_v;
+eigs/primme_interface.c:              primme->numEvals = (int)*v.int_v;
+eigs/primme_interface.c:              primme->target = *v.target_v;
+eigs/primme_interface.c:              primme->numTargetShifts = (int)*v.int_v;
+eigs/primme_interface.c:              primme->targetShifts = v.double_v;
+eigs/primme_interface.c:              primme->locking = (int)*v.int_v;
+eigs/primme_interface.c:              primme->initSize = (int)*v.int_v;
+eigs/primme_interface.c:              primme->numOrthoConst = (int)*v.int_v;
+eigs/primme_interface.c:              primme->dynamicMethodSwitch = (int)*v.int_v;
+eigs/primme_interface.c:              primme->maxBasisSize = (int)*v.int_v;
+eigs/primme_interface.c:              primme->minRestartSize = (int)*v.int_v;
+eigs/primme_interface.c:              primme->maxBlockSize = (int)*v.int_v;
+eigs/primme_interface.c:              primme->maxMatvecs = *v.int_v;
+eigs/primme_interface.c:              primme->maxOuterIterations = *v.int_v;
+eigs/primme_interface.c:              primme->intWorkSize = (int)*v.int_v;
+eigs/primme_interface.c:              primme->realWorkSize = (size_t)*v.int_v;
+eigs/primme_interface.c:            primme->iseed[i] = v.int_v[i];
+eigs/primme_interface.c:              primme->intWork = (int*)v.int_v;
+eigs/primme_interface.c:              primme->realWork = v.ptr_v;
+eigs/primme_interface.c:              primme->aNorm = *v.double_v;
+eigs/primme_interface.c:              primme->eps = *v.double_v;
+eigs/primme_interface.c:              primme->printLevel = (int)*v.int_v;
+eigs/primme_interface.c:              primme->outputFile = v.file_v;
+eigs/primme_interface.c:              primme->matrix = v.ptr_v;
+eigs/primme_interface.c:              primme->preconditioner = v.ptr_v;
+eigs/primme_interface.c:              primme->initBasisMode = *v.init_v;
+eigs/primme_interface.c:              primme->projectionParams.projection = *v.projection_v;
+eigs/primme_interface.c:              primme->restartingParams.scheme = *v.restartscheme_v;
+eigs/primme_interface.c:              primme->restartingParams.maxPrevRetain = (int)*v.int_v;
+eigs/primme_interface.c:              primme->correctionParams.precondition = (int)*v.int_v;
+eigs/primme_interface.c:              primme->correctionParams.robustShifts = (int)*v.int_v;
+eigs/primme_interface.c:              primme->correctionParams.maxInnerIterations = (int)*v.int_v;
+eigs/primme_interface.c:              primme->correctionParams.projectors.LeftQ = (int)*v.int_v;
+eigs/primme_interface.c:              primme->correctionParams.projectors.LeftX = (int)*v.int_v;
+eigs/primme_interface.c:              primme->correctionParams.projectors.RightQ = (int)*v.int_v;
+eigs/primme_interface.c:              primme->correctionParams.projectors.RightX = (int)*v.int_v;
+eigs/primme_interface.c:              primme->correctionParams.projectors.SkewQ = (int)*v.int_v;
+eigs/primme_interface.c:              primme->correctionParams.projectors.SkewX = (int)*v.int_v;
+eigs/primme_interface.c:              primme->correctionParams.convTest = *v.convergencetest_v;
+eigs/primme_interface.c:              primme->correctionParams.relTolBase = *v.double_v;
+eigs/primme_interface.c:              primme->stats.numOuterIterations = *v.int_v;
+eigs/primme_interface.c:              primme->stats.numRestarts = *v.int_v;
+eigs/primme_interface.c:              primme->stats.numMatvecs = *v.int_v;
+eigs/primme_interface.c:              primme->stats.numPreconds = *v.int_v;
+eigs/primme_interface.c:              primme->stats.elapsedTime = *v.double_v;
+eigs/primme_interface.c:              primme->stats.estimateMinEVal = *v.double_v;
+eigs/primme_interface.c:              primme->stats.estimateMaxEVal = *v.double_v;
+eigs/primme_interface.c:              primme->stats.estimateLargestSVal = *v.double_v;
+eigs/primme_interface.c:              primme->stats.maxConvTol = *v.double_v;
+eigs/primme_interface.c:              primme->convTestFun = v.convTestFun_v;
+eigs/primme_interface.c:              primme->ldevecs = *v.int_v;
+eigs/primme_interface.c:              primme->ldOPs = *v.int_v;
+eigs/restart.c:   double aNorm = primme?max(primme->aNorm, primme->stats.estimateLargestSVal):0.0;
+eigs/restart.c:      if (primme->locking) {
+eigs/restart.c:               *numConverged < primme->numEvals &&
+eigs/restart.c:               (i < primme->numEvals-*numLocked
+eigs/restart.c:                || primme->target == primme_closest_geq
+eigs/restart.c:                || primme->target == primme_closest_leq)) {
+eigs/restart.c:   if (basisSize + *numLocked + primme->numOrthoConst >= primme->n) {
+eigs/restart.c:   else if (basisSize <= primme->maxBasisSize - primme->maxBlockSize) {
+eigs/restart.c:   else if (primme->restartingParams.scheme == primme_dtr) {
+eigs/restart.c:      int numFree = *numPrevRetained+max(3, primme->maxBlockSize);
+eigs/restart.c:      restartSize = min(basisSize, primme->minRestartSize);
+eigs/restart.c:      if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/restart.c:         fprintf(primme->outputFile, 
+eigs/restart.c:         fflush(primme->outputFile);
+eigs/restart.c:   primme->stats.estimateResidualError = 2*sqrt((double)*restartsSinceReset)*machEps*aNorm;
+eigs/restart.c:   if (primme->locking)
+eigs/restart.c:   if (primme->locking)
+eigs/restart.c:   if (!primme->locking) {
+eigs/restart.c:   if (primme->target != primme_smallest && primme->target != primme_largest) {
+eigs/restart.c:            primme->nLocal, evecsHat, ldevecsHat, M, ldM, UDU, ldUDU, ipivot,
+eigs/restart.c:   if (*numConverged >= primme->numEvals && !primme->locking) {
+eigs/restart.c:               (size_t)(primme->numOrthoConst+*numConverged)*
+eigs/restart.c:               (size_t)(primme->numOrthoConst+*numConverged)*2);
+eigs/restart.c:   aNorm = max(primme->stats.estimateLargestSVal, primme->aNorm);
+eigs/restart.c:   if (basisSize + primme->numOrthoConst < primme->n) {
+eigs/restart.c:      primme->stats.maxConvTol = 0.0;
+eigs/restart.c:      for (i=0; i<primme->numEvals; i++) {
+eigs/restart.c:            primme->stats.maxConvTol = max(primme->stats.maxConvTol, resNorms[i]);
+eigs/restart.c:            if (i < primme->numEvals) (*numConverged)++;
+eigs/restart.c:                  primme->maxBlockSize,
+eigs/restart.c:                  primme->numEvals-*numConverged+1),
+eigs/restart.c:                  primme->maxBasisSize-*restartSize-numPrevRetained),
+eigs/restart.c:   *ievSize = max(0, min(*ievSize, primme->minRestartSize - *numConverged));
+eigs/restart.c:      for (i=0; i<*restartSize && *numConverged<primme->numEvals; i++) {
+eigs/restart.c:         Num_copy_matrix_Sprimme(&evecs[(restartPerm[i]+primme->numOrthoConst)*nLocal],
+eigs/restart.c:               &evecs[(newNumConvergedStored+primme->numOrthoConst)*nLocal],
+eigs/restart.c:         Num_copy_matrix_Sprimme(&evecsHat[(restartPerm[i]+primme->numOrthoConst)*ldevecsHat],
+eigs/restart.c:               &evecsHat[(newNumConvergedStored+primme->numOrthoConst)*ldevecsHat],
+eigs/restart.c:      oldSizeM = *numConvergedStored + primme->numOrthoConst;
+eigs/restart.c:      newSizeM = newNumConvergedStored + primme->numOrthoConst;
+eigs/restart.c:      for (i=0; i < primme->numOrthoConst; i++)
+eigs/restart.c:         rwork[oldSizeM*i + restartPerm[i]+primme->numOrthoConst] = 1.0;
+eigs/restart.c:               evecsSize+nX2e-nX2b-1, NULL, 0, 0, mV, primme->iseed, 
+eigs/restart.c:               ldevecs, evecsSize+nX2e-nX2b, mV, primme->iseed, 
+eigs/restart.c:               evecs, ldevecs, evecsSize, mV, primme->iseed, machEps, rwork,
+eigs/restart.c:   if (primme->globalSumReal) {
+eigs/restart.c:   switch (primme->projectionParams.projection) {
+eigs/restart.c:               &evecs[ldevecs*(*evecsSize+primme->numOrthoConst)], nLocal,
+eigs/restart.c:               &evecsHat[ldevecsHat*(*evecsSize+primme->numOrthoConst)],
+eigs/restart.c:      CHKERR(update_projection_Sprimme(evecs, primme->nLocal, evecsHat,
+eigs/restart.c:               primme->nLocal, M, ldM, nLocal, *evecsSize+primme->numOrthoConst,
+eigs/restart.c:               *evecsSize+primme->numOrthoConst, rwork, rworkSize, primme), -1);
+eigs/restart.c:   double aNorm = primme?max(primme->aNorm, primme->stats.estimateLargestSVal):0.0;
+eigs/restart.c:   if (*targetShiftIndex < 0 || fabs(primme->targetShifts[*targetShiftIndex]
+eigs/restart.c:            - primme->targetShifts[min(primme->numTargetShifts-1, numConverged)])
+eigs/restart.c:      *targetShiftIndex = min(primme->numTargetShifts-1, numConverged);
+eigs/restart.c:               primme->targetShifts[*targetShiftIndex], 0,
+eigs/restart.c:   Num_zero_matrix_Sprimme(R, primme->maxBasisSize, primme->maxBasisSize,
+eigs/restart.c:         0, 0, mhVecsRot0, primme->iseed, machEps, rwork0, &rworkSize0, NULL),
+eigs/restart.c:            nRegular+numPrevRetained-1, NULL, 0, 0, basisSize, primme->iseed,
+eigs/restart.c:   Num_zero_matrix_Sprimme(hVecsRot, primme->maxBasisSize, primme->maxBasisSize,
+eigs/restart.c:   *targetShiftIndex = min(primme->numTargetShifts-1, numConverged);
+eigs/restart.c:         primme->targetShifts[*targetShiftIndex], 0,
+eigs/restart.c:   /* lMin should be no smaller than primme->minRestartSize.            */
+eigs/restart.c:   if (primme->locking) {
+eigs/restart.c:         if (flags[l] != UNCONVERGED && numLocked + l < primme->numEvals) {
+eigs/restart.c:      lMin = max(lMin, min(basisSize, primme->minRestartSize));
+eigs/restart.c:      lMin = min(basisSize, primme->minRestartSize);
+eigs/restart.c:   if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/restart.c:      fprintf(primme->outputFile,"DTR basisSize: %d\n", basisSize);
+eigs/restart.c:         if ((basisSize - l - r) % primme->maxBlockSize == 0) {
+eigs/restart.c:   if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/restart.c:      fprintf(primme->outputFile,"DTR restart size: %d L: %d R: %d\n", 
+eigs/restart.c:   for (i=restartSize; i<primme->maxBasisSize; i++) {
+eigs/restart.c:   if (primme->projectionParams.projection == primme_proj_harmonic) {
+eigs/restart.c:               basisSize, primme->iseed, machEps, rwork, rworkSize, NULL), -1);
+eigs/restart.c:   if (primme->procID == 0) {
+eigs/restart.c:               NULL, 0, 0, basisSize, primme->iseed, machEps, rwork0,
+eigs/restart.c:   if (primme->procID == 0) {
+eigs/restart.c:      *iwork = max(*iwork, primme->restartingParams.maxPrevRetain);
+eigs/restart.c:   assert(iworkSize >= primme->restartingParams.maxPrevRetain);
+eigs/restart.c:   for (i=0, index=0; i < primme->restartingParams.maxPrevRetain
+eigs/restart.c:   if (primme->projectionParams.projection == primme_proj_RR
+eigs/restart.c:         || primme->projectionParams.projection == primme_proj_refined) {
+eigs/restart.c:   else if (primme->projectionParams.projection == primme_proj_harmonic) {
+eigs/restart.c:   if (primme->printLevel >= 5 && primme->procID == 0) {
+eigs/restart.c:      fprintf(primme->outputFile, "retain_previous: numPrevRetained: %d\n",
+eigs/solve_projection.c:   if (primme->procID == 0) {
+eigs/solve_projection.c:      switch (primme->projectionParams.projection) {
+eigs/solve_projection.c:      primme->stats.estimateMinEVal = min(primme->stats.estimateMinEVal,
+eigs/solve_projection.c:      primme->stats.estimateMaxEVal = max(primme->stats.estimateMaxEVal,
+eigs/solve_projection.c:   primme->stats.estimateLargestSVal = max(fabs(primme->stats.estimateMinEVal),
+eigs/solve_projection.c:                                           fabs(primme->stats.estimateMaxEVal));
+eigs/solve_projection.c:   if (primme->target != primme_largest) {
+eigs/solve_projection.c:   else { /* (primme->target == primme_largest) */
+eigs/solve_projection.c:   if (primme->target == primme_smallest) 
+eigs/solve_projection.c:   if (primme->target == primme_largest) {
+eigs/solve_projection.c:        primme->targetShifts[min(primme->numTargetShifts-1, numConverged)];
+eigs/solve_projection.c:      if (primme->target == primme_closest_geq) {
+eigs/solve_projection.c:      else if (primme->target == primme_closest_leq) {
+eigs/solve_projection.c:      else if (primme->target == primme_closest_abs) {
+eigs/solve_projection.c:      else if (primme->target == primme_largest_abs) {
+eigs/solve_projection.c:   oldTargetShifts = primme->targetShifts;
+eigs/solve_projection.c:   oldTarget = primme->target;
+eigs/solve_projection.c:   primme->targetShifts = &zero;
+eigs/solve_projection.c:   switch(primme->target) {
+eigs/solve_projection.c:         primme->target = primme_largest;
+eigs/solve_projection.c:         primme->target = primme_smallest;
+eigs/solve_projection.c:         primme->target = primme_largest_abs;
+eigs/solve_projection.c:   primme->targetShifts = oldTargetShifts;
+eigs/solve_projection.c:   primme->target = oldTarget;
+eigs/solve_projection.c:         basisSize, primme->iseed, machEps, rwork, lrwork, primme), -1);
+eigs/solve_projection.c:   if (primme->target == primme_closest_abs 
+eigs/solve_projection.c:         || primme->target == primme_closest_leq
+eigs/solve_projection.c:         || primme->target == primme_closest_geq) {
+eigs/solve_projection.c:      switch (primme->projectionParams.projection) {
+eigs/solve_projection.c:   if (primme->procID == 0) {
+eigs/solve_projection.c:      if (primme->procID == 0) {
+eigs/solve_projection.c:   if (primme->procID == 0) {
+eigs/solve_projection.c:      if (primme->procID == 0) {
+eigs/solve_projection.c:   if (primme->procID != 0) {
+eigs/solve_projection.c:   if (primme->projectionParams.projection != primme_proj_refined
+eigs/solve_projection.c:   if (basisSize + (primme->locking?primme->initSize:0) 
+eigs/solve_projection.c:         + primme->numOrthoConst >= primme->n) {
+eigs/solve_projection.c:   aNorm = (primme->aNorm <= 0.0) ?
+eigs/solve_projection.c:      primme->stats.estimateLargestSVal : primme->aNorm;
+eigs/solve_projection.c:            (aNorm*primme->eps/fabs(hVals[i]-hVals[i-1]));
+eigs/solve_projection.c:               primme->maxBasisSize, i-*arbitraryVecs, ldhVecsRot);
+eigs/update_projection.c:      Num_gemv_Sprimme("C", primme->nLocal, j-numCols+1, 1.0,
+eigs/update_projection.c:         &X[primme->nLocal*numCols], primme->nLocal, &Y[primme->nLocal*j], 1, 
+eigs/update_projection.c:   if (primme->numProcs > 1 && isSymmetric) {
+eigs/update_projection.c:   else if (primme->numProcs > 1 && !isSymmetric) {
+eigs/update_W.c:   assert(primme->ldOPs == 0 || primme->ldOPs >= nLocal);
+eigs/update_W.c:   if (primme->ldOPs == 0 || (ldV == primme->ldOPs && ldW == primme->ldOPs)) {
+eigs/update_W.c:      CHKERRM((primme->matrixMatvec(&V[ldV*basisSize], &ldV, &W[ldW*basisSize],
+eigs/update_W.c:         CHKERRM((primme->matrixMatvec(&V[ldV*(basisSize+i)], &primme->ldOPs,
+eigs/update_W.c:                     &W[ldW*(basisSize+i)], &primme->ldOPs, &ONE, primme,
+eigs/update_W.c:   primme->stats.timeMatvec += primme_wTimer(0) - t0;
+eigs/update_W.c:   primme->stats.numMatvecs += blockSize;
+eigs/update_W.c:         basisSize+blockSize-1, NULL, 0, 0, primme->nLocal, 
+eigs/update_W.c:         0, 0, nLocal, primme->iseed, machEps, rwork, rworkSize, primme), -1);
+svds/primme_svds.c: *            int primme->intWorkSize : bytes of int workspace needed
+svds/primme_svds.c: *       long int primme->realWorkSize: bytes of real workspace needed
+svds/primme_svds.c: *        primme->numEvals.
+svds/primme_svds.c: *        the array is at least primme->nLocal*primme->numEvals
+svds/primme_svds.c: *           size primme->numEvals
+svds/primme_svds.c:   /* The value numSvals-primme->numEvals indicates how many svals */
+svds/primme_svds.c:      primme->maxMatvecs = 1;
+svds/primme_svds.c:   if (!primme->matrixMatvec) {
+svds/primme_svds.c:      primme->matrixMatvec = matrixMatvecSVDS;
+svds/primme_svds.c:      primme->matrix = primme_svds;
+svds/primme_svds.c:   if (!primme->applyPreconditioner) {
+svds/primme_svds.c:      primme->applyPreconditioner = applyPreconditionerSVDS;
+svds/primme_svds.c:      primme->preconditioner = primme_svds;
+svds/primme_svds.c:         primme->aNorm = primme_svds->aNorm*primme_svds->aNorm;
+svds/primme_svds.c:         primme->aNorm = primme_svds->aNorm;
+svds/primme_svds.c:      primme->convTestFun = convTestFunATA;
+svds/primme_svds.c:      primme->convTestFun = convTestFunATA;
+svds/primme_svds.c:      primme->convTestFun = convTestFunAugmented;
+svds/primme_svds.c:   primme->initSize = primme_svds->initSize;
+svds/primme_svds.c:   primme->numOrthoConst = primme_svds->numOrthoConst;
+svds/primme_svds.c:      assert(primme->nLocal == primme_svds->mLocal+primme_svds->nLocal);
+svds/primme_svds.c:      CHKERRS(MALLOC_PRIMME(primme->nLocal*n, &aux), NULL);
+svds/primme_svds.c:      Num_copy_Sprimme(primme->nLocal*n, svecs, 1, aux, 1);
+svds/primme_svds.c:         n, primme_svds->nLocal, svecs, primme->nLocal);
+svds/primme_svds.c:         &svecs[primme_svds->nLocal], primme->nLocal);
+svds/primme_svds.c:      Num_scal_Sprimme(primme->nLocal*primme_svds->numOrthoConst, 1./sqrt(2.),
+svds/primme_svds.c:   primme->iseed[0] = primme_svds->iseed[0];
+svds/primme_svds.c:   primme->iseed[1] = primme_svds->iseed[1];
+svds/primme_svds.c:   primme->iseed[2] = primme_svds->iseed[2];
+svds/primme_svds.c:   primme->iseed[3] = primme_svds->iseed[3];
+svds/primme_svds.c:   primme->maxMatvecs = primme_svds->maxMatvecs;
+svds/primme_svds.c:   primme->intWork = primme_svds->intWork;
+svds/primme_svds.c:   primme->intWorkSize = primme_svds->intWorkSize;
+svds/primme_svds.c:   if ((primme->matrixMatvec == matrixMatvecSVDS) &&
+svds/primme_svds.c:      cut = primme->maxBlockSize * (method == primme_svds_op_AtA ?
+svds/primme_svds.c:   primme->realWork = (SCALAR*)primme_svds->realWork + cut;
+svds/primme_svds.c:   primme->realWorkSize = primme_svds->realWorkSize - cut*sizeof(SCALAR);
+svds/primme_svds.c:       (stage == 1 && primme->targetShifts == NULL &&
+svds/primme_svds.c:      primme->numTargetShifts = primme_svds->numTargetShifts;
+svds/primme_svds.c:         CHKERRS(MALLOC_PRIMME(primme_svds->numSvals, &primme->targetShifts),
+svds/primme_svds.c:         for (i=0; i<primme->numTargetShifts; i++) {
+svds/primme_svds.c:            primme->targetShifts[i] = 
+svds/primme_svds.c:         primme->targetShifts = primme_svds->targetShifts;
+svds/primme_svds.c:   else if (stage == 1 && primme->targetShifts == NULL &&
+svds/primme_svds.c:      CHKERRS(MALLOC_PRIMME(primme_svds->numSvals, &primme->targetShifts),
+svds/primme_svds.c:         primme->targetShifts[i] = max(svals[i]-rnorms[i], primme_svds->aNorm*machEps);
+svds/primme_svds.c:         primme->targetShifts[i] = primme_svds->aNorm*machEps;
+svds/primme_svds.c:      qsort(primme->targetShifts, primme_svds->numSvals, sizeof(double),
+svds/primme_svds.c:      primme->numTargetShifts = primme_svds->numSvals;
+svds/primme_svds.c:         primme->targetShifts == NULL) {
+svds/primme_svds.c:      CHKERRS(MALLOC_PRIMME(1, &primme->targetShifts), NULL);
+svds/primme_svds.c:      primme->targetShifts[0] = 0.0;
+svds/primme_svds.c:      primme->numTargetShifts = 1;
+svds/primme_svds.c:   if (method == primme_svds_op_augmented && primme->initSize <= 0) {
+svds/primme_svds.c:         Num_larnv_Sprimme(2, primme->iseed, primme_svds->mLocal,
+svds/primme_svds.c:         Num_larnv_Sprimme(2, primme->iseed, primme_svds->nLocal, svecs);
+svds/primme_svds.c:      primme->initSize = 1;
+svds/primme_svds.c:      primme->initBasisMode = primme_init_user;
+svds/primme_svds.c:      for (i=0; primme->initSize > 0; i++) {
+svds/primme_svds.c:         CHKERRMS((primme->convTestFun(&ev, NULL, &resnorm, &isConv, primme,
+svds/primme_svds.c:         primme->numOrthoConst++;
+svds/primme_svds.c:         primme->initSize--;
+svds/primme_svds.c:         primme->numEvals--;
+svds/primme_svds.c:      primme->locking = primme_svds->locking;
+svds/primme_svds.c:      primme->maxMatvecs = 1;
+svds/primme_svds.c:      int nconv = primme_svds->numSvals - primme->numEvals;
+svds/primme_svds.c:      primme->initSize += nconv;
+svds/primme_svds.c:      primme->numOrthoConst -= nconv;
+svds/primme_svds.c:      primme->numEvals += nconv;
+svds/primme_svds.c:   primme_svds->stats.numOuterIterations += primme->stats.numOuterIterations;
+svds/primme_svds.c:   primme_svds->stats.numRestarts        += primme->stats.numRestarts;
+svds/primme_svds.c:   primme_svds->stats.numMatvecs         += primme->stats.numMatvecs;
+svds/primme_svds.c:   primme_svds->stats.numPreconds        += primme->stats.numPreconds;
+svds/primme_svds.c:   primme_svds->stats.elapsedTime        += primme->stats.elapsedTime;
+svds/primme_svds.c:   if (primme->aNorm > 0.0) {
+svds/primme_svds.c:         primme_svds->aNorm = sqrt(primme->aNorm);
+svds/primme_svds.c:         primme_svds->aNorm = primme->aNorm;
+svds/primme_svds.c:      for (i=0; i<primme->initSize; i++) {
+svds/primme_svds.c:   primme_svds->initSize = primme->initSize;
+svds/primme_svds.c:            &svecs[primme_svds->mLocal*nMax+primme->nLocal*primme_svds->numOrthoConst],
+svds/primme_svds.c:            &svecs[primme_svds->mLocal*n+primme->nLocal*primme_svds->numOrthoConst],
+svds/primme_svds.c:            &svecs[primme_svds->mLocal*n+primme->nLocal*primme_svds->numOrthoConst],
+svds/primme_svds.c:      assert(primme->nLocal == primme_svds->mLocal+primme_svds->nLocal);
+svds/primme_svds.c:      Num_scal_Sprimme(primme->nLocal*primme_svds->numOrthoConst, sqrt(2.),
+svds/primme_svds.c:      CHKERRS(MALLOC_PRIMME(primme->nLocal*n, &aux), -1);
+svds/primme_svds.c:      Num_copy_Sprimme(primme->nLocal*n, svecs, 1, aux, 1);
+svds/primme_svds.c:      Num_copy_matrix_Sprimme(aux, primme_svds->nLocal, n, primme->nLocal,
+svds/primme_svds.c:         primme->nLocal, svecs, primme_svds->mLocal);
+svds/primme_svds.c:   primme_svds->iseed[0] = primme->iseed[0];
+svds/primme_svds.c:   primme_svds->iseed[1] = primme->iseed[1];
+svds/primme_svds.c:   primme_svds->iseed[2] = primme->iseed[2];
+svds/primme_svds.c:   primme_svds->iseed[3] = primme->iseed[3];
+svds/primme_svds.c:   primme_svds->maxMatvecs -= primme->stats.numMatvecs;
+svds/primme_svds.c:   primme->intWork = NULL;
+svds/primme_svds.c:   primme->realWork = NULL;
+svds/primme_svds.c:      free(primme->targetShifts);
+svds/primme_svds.c:      primme->targetShifts = NULL;
+svds/primme_svds.c:   primme_svds_params *primme_svds = (primme_svds_params *) primme->matrix;
+svds/primme_svds.c:      for (i=0, bs=min((*blockSize-i), primme->maxBlockSize); bs>0;
+svds/primme_svds.c:               i+= bs, bs=min((*blockSize-i), primme->maxBlockSize))
+svds/primme_svds.c:      for (i=0, bs=min((*blockSize-i), primme->maxBlockSize); bs>0;
+svds/primme_svds.c:               i+= bs, bs=min((*blockSize-i), primme->maxBlockSize))
+svds/primme_svds.c:   primme_svds_params *primme_svds = (primme_svds_params *) primme->preconditioner;
+svds/primme_svds.c:   const double aNorm = (primme->aNorm > 0.0) ?
+svds/primme_svds.c:      primme->aNorm : primme->stats.estimateLargestSVal;
+svds/primme_svds.c:               primme->eps * sqrt(fabs(*eval * aNorm)),
+svds/primme_svds.c:   const double aNorm = (primme->aNorm > 0.0) ?
+svds/primme_svds.c:      primme->aNorm : primme->stats.estimateLargestSVal;
+svds/primme_svds.c:   primme_svds_params *primme_svds = (primme_svds_params *) primme->matrix;
+svds/primme_svds.c:               primme->eps / sqrt(2.0) * aNorm,
+svds/primme_svds.c:      SCALAR *r = (SCALAR*)malloc(sizeof(SCALAR)*primme->nLocal);
+svds/primme_svds.c:      matrixMatvecSVDS(evec, &primme->nLocal, r, &primme->nLocal, &one, primme,
+svds/primme_svds.c:      primme->stats.numMatvecs++;
+svds/primme_svds.c:      normr0 = REAL_PART(Num_dot_Sprimme(primme->nLocal, r, 1, r, 1));
+svds/primme_svds.c:      if (normr < max(aNorm/sqrt(2.0)*primme->eps, machEps * 3.16 * aNorm)) { 
+svds/primme_svds_interface.c:      primme->maxMatvecs = 1;
+svds/primme_svds_interface.c:   primme->numEvals = primme_svds->numSvals;
+svds/primme_svds_interface.c:         primme->aNorm = primme_svds->aNorm*primme_svds->aNorm;
+svds/primme_svds_interface.c:         primme->aNorm = primme_svds->aNorm*sqrt(2.0);
+svds/primme_svds_interface.c:   primme->eps = primme_svds->eps;
+svds/primme_svds_interface.c:   primme->initSize = primme_svds->initSize;
+svds/primme_svds_interface.c:      primme->maxBasisSize = primme_svds->maxBasisSize;
+svds/primme_svds_interface.c:      primme->maxBlockSize = primme_svds->maxBlockSize;
+svds/primme_svds_interface.c:   primme->maxMatvecs = primme_svds->maxMatvecs;
+svds/primme_svds_interface.c:   primme->printLevel = primme_svds->printLevel;
+svds/primme_svds_interface.c:   primme->outputFile = primme_svds->outputFile;
+svds/primme_svds_interface.c:   primme->numOrthoConst = primme_svds->numOrthoConst;
+svds/primme_svds_interface.c:      primme->procID = primme_svds->procID;
+svds/primme_svds_interface.c:      primme->numProcs = primme_svds->numProcs;
+svds/primme_svds_interface.c:      primme->commInfo = primme_svds->commInfo;
+svds/primme_svds_interface.c:      primme->globalSumReal = globalSumRealSvds;
+svds/primme_svds_interface.c:      primme->n = primme_svds->n;
+svds/primme_svds_interface.c:      primme->nLocal = primme_svds->nLocal;
+svds/primme_svds_interface.c:      primme->n = primme_svds->m;
+svds/primme_svds_interface.c:      primme->nLocal = primme_svds->mLocal;
+svds/primme_svds_interface.c:      primme->n = primme_svds->m + primme_svds->n;
+svds/primme_svds_interface.c:      primme->nLocal = primme_svds->mLocal + primme_svds->nLocal;
+svds/primme_svds_interface.c:      primme->target = primme_largest;
+svds/primme_svds_interface.c:      primme->target = (method == primme_svds_op_augmented) ?
+svds/primme_svds_interface.c:      primme->target = primme_closest_abs;
+svds/primme_svds_interface.c:      primme->numTargetShifts = primme_svds->numTargetShifts;
+svds/primme_svds_interface.c:   if (stage == 1 && primme->initBasisMode == primme_init_default) {
+svds/primme_svds_interface.c:      primme->initBasisMode = primme_init_user;
+svds/primme_svds_interface.c:         primme->projectionParams.projection == primme_proj_default) {
+svds/primme_svds_interface.c:      primme->projectionParams.projection = primme_proj_refined;
+svds/primme_svds_interface.c:      primme->locking = primme_svds->locking;
+svds/primme_svds_interface.c:      primme->correctionParams.precondition = primme_svds->precondition;
+svds/primme_svds_interface.c:   else if (primme->correctionParams.precondition < 0) {
+svds/primme_svds_interface.c:      primme->correctionParams.precondition = primme_svds->applyPreconditioner ? 1 : 0;
+svds/primme_svds_interface.c:   free(primme->intWork);
+svds/primme_svds_interface.c:   free(primme->realWork);
+svds/primme_svds_interface.c:   primme->intWorkSize  = 0;
+svds/primme_svds_interface.c:   primme->realWorkSize = 0;
+svds/primme_svds_interface.c:   primme_svds_params *primme_svds = (primme_svds_params *) primme->matrix;
